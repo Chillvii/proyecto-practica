@@ -1,0 +1,39 @@
+<section class="employee-list">
+  <header class="employee-list__header">
+    <h2>Empleados</h2>
+    <p class="employee-list__hint">
+      Listado simple. Tu siguiente reto: añade detalle, alta, edición y borrado.
+    </p>
+  </header>
+
+  @if (loading()) {
+    <p class="employee-list__status">Cargando empleados…</p>
+  } @else if (error()) {
+    <p class="employee-list__status employee-list__status--error">{{ error() }}</p>
+  } @else if (employees().length === 0) {
+    <p class="employee-list__status">No hay empleados en la base de datos.</p>
+  } @else {
+    <table class="employee-list__table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Email</th>
+          <th>Puesto</th>
+          <th>Fecha de alta</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (employee of employees(); track employee.id) {
+          <tr>
+            <td>{{ employee.firstName }}</td>
+            <td>{{ employee.lastName }}</td>
+            <td>{{ employee.email }}</td>
+            <td>{{ employee.position }}</td>
+            <td>{{ employee.hiredAt }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</section>

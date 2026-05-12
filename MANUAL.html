@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Manual interactivo — proyecto-practica</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --bg: #f6f1e7;
+      --paper: #fffdf8;
+      --ink: #1d1d1f;
+      --ink-soft: #4a4a52;
+      --muted: #7a7a85;
+      --line: #e6dfd1;
+      --line-strong: #d2c9b4;
+      --accent: #b04a2f;     /* terracota */
+      --accent-soft: #f3d8cd;
+      --indigo: #2b3a67;
+      --gold: #b48a3c;
+      --ok: #2f7d4f;
+      --radius-lg: 18px;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --shadow-sm: 0 1px 2px rgba(29, 29, 31, 0.06);
+      --shadow: 0 6px 24px rgba(29, 29, 31, 0.08);
+      --shadow-lg: 0 18px 50px rgba(29, 29, 31, 0.18);
+      --serif: "Fraunces", Georgia, "Times New Roman", serif;
+      --sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+      --mono: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 24px;
+    }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(900px 600px at 12% -10%, rgba(176, 74, 47, 0.10), transparent 60%),
+        radial-gradient(800px 500px at 110% 0%, rgba(43, 58, 103, 0.10), transparent 60%);
+      z-index: -1;
+      pointer-events: none;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    img { max-width: 100%; }
+
+    /* ───── Top bar (no sticky, sólo marca de identidad) ───── */
+    .topbar {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 1.5rem 1.5rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: 0.02em;
+    }
+    .brand-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px var(--accent-soft);
+    }
+    .crumb { font-family: var(--mono); font-size: 0.75rem; }
+
+    /* ───── Hero ───── */
+    .hero {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 1.5rem;
+      text-align: left;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 1px;
+      background: var(--accent);
+    }
+    h1 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin: 0 0 1.1rem;
+      color: var(--ink);
+    }
+    h1 em {
+      font-style: italic;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    .lede {
+      font-size: 1.15rem;
+      color: var(--ink-soft);
+      max-width: 42rem;
+      margin: 0 0 1.5rem;
+    }
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 0.75rem 0;
+      margin-top: 1.25rem;
+    }
+    .meta-row span strong { color: var(--ink); font-weight: 600; }
+
+    /* ───── Index card (no sticky) ───── */
+    .container {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .index-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin: 2rem 0;
+      box-shadow: var(--shadow-sm);
+    }
+    .index-title {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 0 0 1rem;
+      color: var(--ink);
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+    }
+    .index-title span {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .index-grid {
+      display: grid;
+      gap: 0.4rem 1.5rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 560px) {
+      .index-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .index-grid a {
+      display: flex;
+      align-items: baseline;
+      gap: 0.65rem;
+      padding: 0.45rem 0;
+      color: var(--ink);
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .index-grid a:hover {
+      color: var(--accent);
+      border-bottom-color: var(--line);
+      text-decoration: none;
+    }
+    .index-grid .num {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      min-width: 1.8rem;
+    }
+
+    /* ───── Sections ───── */
+    main { max-width: 880px; margin: 0 auto; padding: 1rem 1.5rem 5rem; }
+    section.chapter {
+      padding: 2.5rem 0 1rem;
+      border-top: 1px solid var(--line);
+    }
+    section.chapter:first-of-type { border-top: none; }
+    .chapter-head {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .chapter-num {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+    h2 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      letter-spacing: -0.01em;
+      margin: 0;
+      line-height: 1.2;
+      color: var(--ink);
+    }
+    h3 {
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 0.02em;
+      color: var(--indigo);
+      margin: 1.75rem 0 0.5rem;
+      text-transform: uppercase;
+    }
+    p { margin: 0.5rem 0 1rem; color: var(--ink-soft); }
+    p strong, li strong { color: var(--ink); font-weight: 600; }
+    .lead { font-size: 1.08rem; color: var(--ink); }
+    .dropcap::first-letter {
+      font-family: var(--serif);
+      float: left;
+      font-size: 3.4rem;
+      line-height: 0.9;
+      padding: 0.3rem 0.5rem 0 0;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ───── Flow ───── */
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      gap: 0;
+      margin: 1.5rem 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      overflow: hidden;
+    }
+    .flow-step {
+      flex: 1 1 130px;
+      padding: 0.85rem 1rem;
+      font-size: 0.85rem;
+      border-right: 1px solid var(--line);
+      position: relative;
+    }
+    .flow-step:last-child { border-right: none; }
+    .flow-step .label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+    .flow-step strong { color: var(--ink); }
+
+    /* ───── Grid cards ───── */
+    .grid-2 { display: grid; gap: 1rem; }
+    @media (min-width: 640px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.15rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    .card h4 {
+      margin: 0 0 0.5rem;
+      font-size: 0.95rem;
+      color: var(--ink);
+      font-weight: 600;
+    }
+    .card p { margin: 0; font-size: 0.9rem; }
+
+    /* ───── Table ───── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin: 1rem 0;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.7rem 0.9rem;
+      border-bottom: 1px solid var(--line);
+    }
+    tr:last-child td { border-bottom: none; }
+    th {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: rgba(0,0,0,0.015);
+    }
+
+    /* ───── Code ───── */
+    code {
+      font-family: var(--mono);
+      font-size: 0.83em;
+      background: rgba(176, 74, 47, 0.08);
+      color: var(--accent);
+      padding: 0.12em 0.4em;
+      border-radius: 5px;
+    }
+    pre {
+      background: #1d1d1f;
+      color: #f6f1e7;
+      border-radius: var(--radius);
+      padding: 1.1rem 1.2rem;
+      overflow-x: auto;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      margin: 1rem 0;
+      box-shadow: var(--shadow-sm);
+    }
+    pre code { background: none; color: inherit; padding: 0; }
+
+    /* ───── Callouts ───── */
+    .callout {
+      display: flex;
+      gap: 0.85rem;
+      padding: 1rem 1.1rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--paper);
+      margin: 1rem 0;
+    }
+    .callout .ico {
+      flex-shrink: 0;
+      width: 1.6rem;
+      height: 1.6rem;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+      font-family: var(--serif);
+    }
+    .callout.tip { border-left: 3px solid var(--ok); }
+    .callout.tip .ico { background: rgba(47, 125, 79, 0.15); color: var(--ok); }
+    .callout.warn { border-left: 3px solid var(--gold); }
+    .callout.warn .ico { background: rgba(180, 138, 60, 0.18); color: var(--gold); }
+    .callout p { margin: 0; color: var(--ink); }
+
+    /* ───── Steps ───── */
+    ol.steps { counter-reset: s; list-style: none; padding: 0; margin: 1rem 0; }
+    ol.steps li {
+      position: relative;
+      padding-left: 3rem;
+      margin-bottom: 1rem;
+      color: var(--ink-soft);
+    }
+    ol.steps li strong { color: var(--ink); }
+    ol.steps li::before {
+      counter-increment: s;
+      content: counter(s, decimal-leading-zero);
+      position: absolute;
+      left: 0;
+      top: -2px;
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      color: var(--accent);
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    /* ───── Tabs ───── */
+    .tabs {
+      display: inline-flex;
+      gap: 0;
+      padding: 0.25rem;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      margin: 1rem 0;
+    }
+    .tab-btn {
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      padding: 0.45rem 1.1rem;
+      border-radius: 999px;
+      font: inherit;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .tab-btn[aria-selected="true"] {
+      background: var(--ink);
+      color: var(--paper);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fade 0.3s ease; }
+    @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+    /* ───── Details ───── */
+    details {
+      margin: 0.75rem 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 0.7rem 1.1rem;
+      background: var(--paper);
+    }
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--ink);
+      list-style: none;
+      position: relative;
+      padding-left: 1.5rem;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::before {
+      content: "+";
+      position: absolute;
+      left: 0;
+      font-family: var(--mono);
+      color: var(--accent);
+      font-weight: 700;
+      transition: transform 0.2s ease;
+    }
+    details[open] summary::before { content: "−"; }
+    details[open] summary { margin-bottom: 0.75rem; }
+
+    /* ───── Lists ───── */
+    ul.bullets { padding-left: 1.1rem; color: var(--ink-soft); }
+    ul.bullets li { margin-bottom: 0.4rem; }
+    ul.bullets li::marker { color: var(--accent); }
+
+    /* ───── Challenge cards ───── */
+    .challenge { padding: 0; overflow: hidden; }
+    .challenge summary {
+      padding: 1rem 1.25rem 1rem 3.25rem;
+      font-family: var(--sans);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .challenge summary::before {
+      left: 1.25rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+    }
+    .challenge[open] summary::before { transform: translateY(-50%); }
+    .challenge .ch-num {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      background: var(--accent-soft);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+    }
+    .challenge .ch-title {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--ink);
+    }
+    .challenge .ch-desc {
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 400;
+      flex-basis: 100%;
+      margin-left: 0;
+    }
+    .challenge .ch-body {
+      padding: 0 1.25rem 1.25rem 3.25rem;
+      border-top: 1px solid var(--line);
+      padding-top: 1rem;
+    }
+    .challenge .hint-grid { display: grid; gap: 1rem; }
+    @media (min-width: 640px) { .challenge .hint-grid { grid-template-columns: 1fr 1fr; } }
+    .hint {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem 1rem;
+    }
+    .hint h5 {
+      margin: 0 0 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--indigo);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .hint h5::before {
+      content: "";
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--indigo);
+    }
+    .hint.front h5 { color: var(--accent); }
+    .hint.front h5::before { background: var(--accent); }
+    .hint ul { margin: 0; padding-left: 1.1rem; font-size: 0.9rem; color: var(--ink-soft); }
+    .hint ul li { margin-bottom: 0.35rem; }
+    .hint ul li::marker { color: var(--muted); }
+    .hint code { font-size: 0.78em; }
+
+    /* ───── Floating menu (drawer) ───── */
+    .fab {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .fab button {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 1px solid var(--line-strong);
+      background: var(--paper);
+      color: var(--ink);
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+      display: grid;
+      place-items: center;
+    }
+    .fab button:hover { transform: translateY(-2px); }
+    .fab .fab-menu {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+    .fab svg { width: 22px; height: 22px; }
+    #backTop { opacity: 0; pointer-events: none; transition: opacity 0.25s ease, transform 0.2s ease; }
+    #backTop.show { opacity: 1; pointer-events: auto; }
+
+    .drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(29, 29, 31, 0.45);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      z-index: 40;
+      backdrop-filter: blur(2px);
+    }
+    .drawer-backdrop.open { opacity: 1; pointer-events: auto; }
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: min(360px, 90vw);
+      background: var(--paper);
+      border-left: 1px solid var(--line);
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(.2,.7,.2,1);
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-lg);
+    }
+    .drawer.open { transform: translateX(0); }
+    .drawer-head {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .drawer-head h3 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--ink);
+      text-transform: none;
+      letter-spacing: normal;
+    }
+    .drawer-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 1.3rem;
+      padding: 0.25rem 0.5rem;
+    }
+    .drawer-list { padding: 1rem 0.75rem; overflow-y: auto; flex: 1; }
+    .drawer-list a {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      padding: 0.7rem 0.85rem;
+      color: var(--ink);
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      border-left: 3px solid transparent;
+      margin: 0.05rem 0;
+    }
+    .drawer-list a:hover { background: rgba(176, 74, 47, 0.06); text-decoration: none; }
+    .drawer-list a.active {
+      background: rgba(176, 74, 47, 0.08);
+      border-left-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .drawer-list .num {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .drawer-foot {
+      padding: 0.9rem 1.5rem;
+      border-top: 1px solid var(--line);
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-family: var(--mono);
+    }
+
+    footer.endnote {
+      max-width: 880px;
+      margin: 3rem auto 4rem;
+      padding: 2rem 1.5rem 0;
+      border-top: 1px solid var(--line);
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    footer.endnote .sig {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 1.05rem;
+      color: var(--ink-soft);
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand"><span class="brand-dot" aria-hidden="true"></span> proyecto-practica</div>
+    <div class="crumb">manual · v1</div>
+  </div>
+
+  <header class="hero">
+    <div class="eyebrow">Guía para juniors</div>
+    <h1>Un punto de partida <em>amable</em><br />para Spring Boot, Mongo y Angular.</h1>
+    <p class="lede">
+      Este manual te orienta dentro del monorepo: qué instalar, qué construir y cómo
+      ganar autonomía a base de pequeños retos. Tómalo como un cuaderno de campo, no como una checklist.
+    </p>
+    <div class="meta-row">
+      <span><strong>Stack</strong> · Java 21 · Mongo · Angular 17</span>
+      <span><strong>Tiempo de lectura</strong> · ~10 min</span>
+      <span><strong>Nivel</strong> · Iniciación</span>
+    </div>
+  </header>
+
+  <div class="container">
+    <aside class="index-card" aria-labelledby="indice-titulo">
+      <h2 class="index-title" id="indice-titulo">Índice <span>8 capítulos</span></h2>
+      <div class="index-grid">
+        <a href="#proyecto"><span class="num">01</span> El proyecto en una imagen</a>
+        <a href="#instalar"><span class="num">02</span> Qué necesitas instalado</a>
+        <a href="#objetivos"><span class="num">03</span> Objetivos de aprendizaje</a>
+        <a href="#junior"><span class="num">04</span> Consejos si estás empezando</a>
+        <a href="#herramientas"><span class="num">05</span> Herramientas recomendadas</a>
+        <a href="#git"><span class="num">06</span> Trabajar con Git sin miedo</a>
+        <a href="#stack"><span class="num">07</span> Stack backend y frontend</a>
+        <a href="#retos"><span class="num">08</span> Retos paso a paso</a>
+      </div>
+    </aside>
+  </div>
+
+  <main>
+    <section id="proyecto" class="chapter">
+      <div class="chapter-head"><span class="chapter-num">— 01</span><h2>El proyecto en una imagen</h2></div>
+      <p class="lead dropcap">
+        Es un monorepo didáctico: una base mínima ya funcionando para que practiques features
+        reales sin perder días en infraestructura. El alcance es deliberadamente pequeño;
+        lo que falta (CRUD completo, validaciones, modales, paginación, otra entidad…) son retos para ti.
+      </p>
+      <div class="flow" aria-label="Flujo de datos">
+        <div class="flow-step"><span class="label">Cliente</span><strong>Angular</strong><br /><span style="font-size:.78rem;color:var(--muted)">localhost:4200</span></div>
+        <div class="flow-step"><span class="label">Transporte</span><strong>HTTP REST</strong><br /><span style="font-size:.78rem;color:var(--muted)">JSON</span></div>
+        <div class="flow-step"><span class="label">Servidor</span><strong>Spring Boot</strong><br /><span style="font-size:.78rem;color:var(--muted)">localhost:8080</span></div>
+        <div class="flow-step"><span class="label">Datos</span><strong>MongoDB</strong><br /><span style="font-size:.78rem;color:var(--muted)">vía Docker</span></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <h4>Backend</h4>
+          <p>Java 21, Spring Boot 3, Maven. Endpoint de ejemplo: <code>GET /api/employees</code>. Swagger expuesto en el puerto 8080.</p>
+        </div>
+        <div class="card">
+          <h4>Frontend</h4>
+          <p>Angular 17+, standalone components, signals y SCSS. Lista de empleados consumiendo el API real.</p>
+        </div>
+      </div>
+      <p style="margin-top:1rem;font-size:.9rem;">La documentación canónica del repo vive en <code>README.md</code>, en la misma carpeta que este manual.</p>
+    </section>
+
+    <section id="instalar" class="chapter">
+      <div class="chapter-head"><span class="chapter-num">— 02</span><h2>Qué necesitas instalado</h2></div>
+      <p>Verifica versiones en una terminal antes de arrancar. Si alguna falla, instálala desde su web oficial; evita gestores no oficiales.</p>
+      <table>
+        <thead><tr><th>Herramienta</th><th>Versión</th><th>Comando</th></tr></thead>
+        <tbody>
+          <tr><td>Java JDK</td><td>21 (Temurin)</td><td><code>java --version</code></td></tr>
+          <tr><td>Maven</td><td>3.9 o superior</td><td><code>mvn --version</code></td></tr>
+          <tr><td>Node.js</td><td>20 LTS o superior</td><td><code>node --version</code></td></tr>
+          <tr><td>npm</td><td>10 o superior</td><td><code>npm --version</code></td></tr>
+          <tr><td>Angular CLI</td><td>17 o superior</td><td><code>ng version</code></td></tr>
+          <tr><td>Docker Desktop</td><td>reciente</td><td><code>docker --version</code></td></tr>
+        </tbody>
+      </table>
+      <div class="callout tip"><div class="ico">i</div><p><strong>Angular CLI global</strong> (sólo si no lo tienes): <code>npm install -g @angular/cli@17</code></p></div>
+    </section>
+
+    <section id="objetivos" class="chapter">
+      <div class="chapter-head"><span class="chapter-num">— 03</span><h2>Objetivos de aprendizaje</h2></div>
+      <ol class="steps">
+        <li><strong>Entender el flujo end-to-end</strong>: desde la petición HTTP en Angular hasta la persistencia en MongoDB.</li>
+        <li><strong>Leer código ajeno</strong>: paquetes <code>employees</code> en back y <code>features/employees</code> en front como referencia de estilo.</li>
+        <li><strong>Ampliar el producto por capas</strong>: DTO, validación, servicios, rutas, formularios reactivos, manejo de errores.</li>
+        <li><strong>Practicar calidad</strong>: tests (JUnit / Karma), mensajes de error claros, decisiones de diseño documentadas.</li>
+      </ol>
+    </section>
+
+    <section id="junior" class="chapter">
+      <div class="chapter-head"><span class="chapter-num">— 04</span><h2>Consejos si estás empezando</h2></div>
+      <ul class="bullets">
+        <li><strong>Un cambio a la vez</strong>: arranca el stack, confirma que ves los 10 empleados de ejemplo, y sólo entonces añade una feature.</li>
+        <li><strong>Reproduce antes de arreglar</strong>: anota el error exacto, el endpoint y el payload. La mitad de los bugs son URL, CORS o datos.</li>
+        <li><strong>Lee el stack trace y la consola de red</strong>: en el navegador, pestaña Network; en Java, el log de Spring.</li>
+        <li><strong>Commits pequeños</strong>: uno por tarea lógica facilita revertir y pedir revisión.</li>
+        <li><strong>Pide feedback con contexto</strong>: “quiero <code>POST /employees</code>, me devuelve 400 con este JSON” es mejor que “no funciona”.</li>
+      </ul>
+    </section>
+
+    <section id="herramientas" class="chapter">
+      <div class="chapter-head"><span class="chapter-num">— 05</span><h2>Herramientas recomendadas</h2></div>
+      <div class="grid-2">
+        <div class="card">
+          <h4>IntelliJ IDEA</h4>
+          <p>Es el IDE que usamos en el proyecto para <strong>Java y el backend</strong>: prioriza IntelliJ ahí. Activa <em>annotation processing</em> e instala el plugin de Lombok para que compile sin avisos raros.</p>
+        </div>
+        <div class="card">
+          <h4>Visual Studio Code</h4>
+          <p>Para <strong>Angular y el frontend</strong> se recomienda <strong>Visual Studio Code</strong>: integración muy buena con TypeScript, plantillas HTML, ESLint y depuración. Instala la extensión oficial <strong>Angular Language Service</strong> (y, si quieres, el <em>Extension Pack for Java</em> sólo si también editas Java desde VS Code; para el back sigue siendo preferible IntelliJ).</p>
+        </div>
+        <div class="card">
+          <h4>Postman</h4>
+          <p>Colecciones para probar la API: <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>PATCH</code> y <code>DELETE</code>, cuerpo JSON y códigos de respuesta antes de tener el formulario en el front.</p>
+        </div>
+        <div class="card">
+          <h4>Terminal</h4>
+          <p>En Windows elige lo que te resulte más cómodo: <strong>PowerShell</strong> (integrado, útil para <code>Get-NetTCPConnection</code> y puertos) o <strong>Git Bash</strong> (sintaxis tipo Linux, como en muchos tutoriales). Tres terminales: Docker, backend y frontend.</p>
+        </div>
+        <div class="card">
+          <h4>Rancher Desktop</h4>
+          <p>Interfaz para contenedores; alternativa a Docker Desktop. Desde la raíz del proyecto:</p>
+          <pre><code>docker compose up -d</code></pre>
+        </div>
+        <div class="card">
+          <h4>Sourcetree (o Git en consola)</h4>
+          <p>Si te abruma la línea de comandos, <strong>Sourcetree</strong> te da una vista gráfica de ramas, commits y diffs. Si prefieres consola, los comandos básicos sobran. Lo importante es ver siempre qué vas a subir.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="git" class="chapter">
+      <div class="chapter-head"><span class="chapter-num">— 06</span><h2>Trabajar con Git sin miedo</h2></div>
+      <p>
+        Regla de oro del repo: <strong>nunca commitees directamente en <code>main</code></strong>.
+        La rama principal queda “virgen” para que cualquiera que clone el proyecto se encuentre la base estable.
+        Tú vives en ramas de feature.
+      </p>
+
+      <h3>Flujo recomendado</h3>
+      <ol class="steps">
+        <li><strong>Actualiza <code>main</code></strong> antes de empezar: <code>git checkout main</code> y <code>git pull</code>.</li>
+        <li><strong>Crea una rama por tarea</strong>: <code>git checkout -b feature/employee-detail</code>. Un nombre, un objetivo.</li>
+        <li><strong>Commitea en pequeño</strong>: un cambio lógico = un commit. Mensaje en imperativo y claro.</li>
+        <li><strong>Sube y abre Pull Request</strong>: <code>git push -u origin feature/...</code> y revisa el diff antes de pedir merge.</li>
+        <li><strong>Tras merge, borra la rama</strong> local y remota para no acumular ruido.</li>
+      </ol>
+
+      <h3>Comandos que más usarás</h3>
+      <pre><code>git status                    # qué ha cambiado
+git diff                      # qué exactamente
+git add .                     # preparar todo
+git commit -m "mensaje"       # confirmar
+git push                      # subir al remoto
+git pull --rebase             # traer cambios de main sin merge sucio
+git log --oneline --graph     # historia visual rápida</code></pre>
+
+      <h3>Estilo de mensajes de commit</h3>
+      <p>Imperativo, en presente, breve y centrado en el <em>qué</em>:</p>
+      <ul class="bullets">
+        <li><code>feat: añade endpoint GET /api/employees/{id}</code></li>
+        <li><code>fix: corrige error 500 al recibir email vacío</code></li>
+        <li><code>refactor: extrae mapper EmployeeMapper</code></li>
+        <li><code>test: cubre EmployeeService.findById con caso no encontrado</code></li>
+        <li><code>docs: explica el flujo de Git en el manual</code></li>
+        <li><code>chore: actualiza dependencias del frontend</code></li>
+      </ul>
+
+      <div class="callout tip"><div class="ico">i</div><p><strong>Antes de commitear</strong>, abre Sourcetree (o ejecuta <code>git diff --staged</code>) y revisa línea a línea: te ahorra explicar bugs después.</p></div>
+      <div class="callout warn"><div class="ico">!</div><p>Si por error commiteaste en <code>main</code> sin subir todavía: <code>git branch feature/x</code>, <code>git reset --hard origin/main</code>, <code>git checkout feature/x</code>. Pregunta antes de hacer <code>--force</code> en remoto.</p></div>
+    </section>
+
+    <section id="stack" class="chapter">
+      <div class="chapter-head"><span class="chapter-num">— 07</span><h2>Stack backend y frontend</h2></div>
+      <p style="margin-top:-.25rem;color:var(--muted);font-size:.95rem">Una vista rápida de qué hay en cada lado antes de meterte en los retos.</p>
+      <div class="tabs" role="tablist">
+        <button class="tab-btn" role="tab" aria-selected="true" aria-controls="panel-back" id="tab-back">Backend</button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-front" id="tab-front">Frontend</button>
+      </div>
+      <div id="panel-back" class="tab-panel active" role="tabpanel" aria-labelledby="tab-back">
+        <p>Spring Boot 3 + Java 21 + Maven. Capas típicas en el paquete <code>employees/</code>:</p>
+        <ul class="bullets">
+          <li><strong>Entity + repositorio</strong> (Spring Data MongoDB): cómo se guarda el documento.</li>
+          <li><strong>Service</strong>: reglas de negocio y orquestación.</li>
+          <li><strong>Controller REST</strong>: rutas, códigos HTTP, validación de entrada.</li>
+          <li><strong>DTO + mapper</strong>: no expongas siempre el modelo interno tal cual.</li>
+          <li><strong>GlobalExceptionHandler</strong>: respuestas de error homogéneas.</li>
+          <li><strong>Seed</strong>: datos iniciales si la colección está vacía al arrancar.</li>
+        </ul>
+        <p style="font-size:.9rem;color:var(--muted)">Documentación API: Springdoc / Swagger. Config: <code>application.yml</code> (Mongo URI, CORS en dev).</p>
+      </div>
+      <div id="panel-front" class="tab-panel" role="tabpanel" aria-labelledby="tab-front" hidden>
+        <p>Angular 17+ con componentes <strong>standalone</strong>, <strong>signals</strong> para estado reactivo y <strong>SCSS</strong>.</p>
+        <ul class="bullets">
+          <li><code>app.config.ts</code>: <code>HttpClient</code>, interceptor de errores, token <code>API_URL</code>.</li>
+          <li><code>features/employees/</code>: modelo, servicio que llama al API y página de lista.</li>
+          <li><code>core/</code>: lógica transversal (interceptors, tokens).</li>
+          <li><code>shared/</code>: hueco para componentes reutilizables a medida que crezcas.</li>
+        </ul>
+        <p style="font-size:.9rem;color:var(--muted)">Rutas y nuevas pantallas se registran en <code>app.routes.ts</code>. Tests de ejemplo: componente + servicio con <code>HttpTestingController</code>.</p>
+      </div>
+    </section>
+
+    <section id="retos" class="chapter">
+      <div class="chapter-head"><span class="chapter-num">— 08</span><h2>Retos paso a paso</h2></div>
+      <p><strong>Deberes mínimos</strong> antes de subir de nivel: levantar los tres procesos sin ayuda, localizar dónde se define la URL del API y ejecutar los tests de back y front al menos una vez.</p>
+      <p style="font-size:.95rem">Cada reto está plegado. Ábrelo y verás pistas para abordarlo tanto desde el <strong>backend</strong> como desde el <strong>frontend</strong>. No son soluciones cerradas: son atajos para que no te quedes en blanco.</p>
+
+      <details class="challenge">
+        <summary>
+          <span class="ch-num">01</span><span class="ch-title">Detalle de empleado</span>
+          <span class="ch-desc"><code>GET /api/employees/{id}</code> y ruta <code>/employees/:id</code> en el front.</span>
+        </summary>
+        <div class="ch-body">
+          <div class="hint-grid">
+            <div class="hint">
+              <h5>Backend</h5>
+              <ul>
+                <li>Añade <code>@GetMapping("/{id}")</code> en <code>EmployeeController</code>.</li>
+                <li>El repositorio ya devuelve <code>Optional&lt;Employee&gt;</code>; si está vacío, lanza una excepción y deja que <code>GlobalExceptionHandler</code> la traduzca a <strong>404</strong>.</li>
+                <li>Mapea la entidad a DTO antes de devolverla.</li>
+                <li>Test con <code>@WebMvcTest</code>: caso encontrado (200) y caso no encontrado (404).</li>
+              </ul>
+            </div>
+            <div class="hint front">
+              <h5>Frontend</h5>
+              <ul>
+                <li>Crea <code>EmployeeDetailComponent</code> standalone en <code>features/employees/pages/</code>.</li>
+                <li>Registra la ruta <code>{ path: 'employees/:id', component: EmployeeDetailComponent }</code> en <code>app.routes.ts</code>.</li>
+                <li>Lee el id con <code>inject(ActivatedRoute)</code> y <code>route.snapshot.paramMap.get('id')</code>.</li>
+                <li>Añade <code>getById(id)</code> al servicio; gestiona estados <em>cargando</em>, <em>error</em> y <em>no encontrado</em> con signals.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="challenge">
+        <summary>
+          <span class="ch-num">02</span><span class="ch-title">Alta de empleado</span>
+          <span class="ch-desc"><code>POST /api/employees</code> con validación y formulario reactivo en <code>/employees/new</code>.</span>
+        </summary>
+        <div class="ch-body">
+          <div class="hint-grid">
+            <div class="hint">
+              <h5>Backend</h5>
+              <ul>
+                <li>Endpoint <code>@PostMapping</code> que recibe un DTO anotado con <code>@Valid</code>.</li>
+                <li>En el DTO: <code>@NotBlank</code> en nombre/apellido/posición, <code>@Email</code> en email.</li>
+                <li>Maneja email duplicado capturando <code>DuplicateKeyException</code> y devolviendo <strong>409 Conflict</strong>.</li>
+                <li>Devuelve <strong>201 Created</strong> con la cabecera <code>Location</code> apuntando al recurso nuevo.</li>
+              </ul>
+            </div>
+            <div class="hint front">
+              <h5>Frontend</h5>
+              <ul>
+                <li>Importa <code>ReactiveFormsModule</code> en el componente standalone.</li>
+                <li>Construye el formulario con <code>FormBuilder</code> y los validadores <code>Validators.required</code> y <code>Validators.email</code>.</li>
+                <li>Muestra los errores de cada campo sólo cuando esté <code>touched</code> o <code>dirty</code>.</li>
+                <li>Tras el <code>create()</code>, redirige al detalle o a la lista; si el back devuelve 409, muestra mensaje claro.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="challenge">
+        <summary>
+          <span class="ch-num">03</span><span class="ch-title">Edición y borrado</span>
+          <span class="ch-desc"><code>PUT</code> y <code>DELETE</code> en el back; pantalla de edición y confirmación en el front.</span>
+        </summary>
+        <div class="ch-body">
+          <div class="hint-grid">
+            <div class="hint">
+              <h5>Backend</h5>
+              <ul>
+                <li><code>@PutMapping("/{id}")</code> devuelve 200 con el recurso actualizado, o 404 si no existe.</li>
+                <li><code>@DeleteMapping("/{id}")</code> devuelve <strong>204 No Content</strong> en éxito.</li>
+                <li>En el service, comprueba existencia antes de actualizar/borrar y devuelve un error semántico claro.</li>
+                <li>Añade un test por caso: éxito, no encontrado y validación fallida.</li>
+              </ul>
+            </div>
+            <div class="hint front">
+              <h5>Frontend</h5>
+              <ul>
+                <li>Reutiliza el formulario del alta en modo edición: precarga los valores con <code>patchValue()</code>.</li>
+                <li>Para borrar, empieza con un <code>confirm()</code> nativo y luego sustitúyelo por un modal propio.</li>
+                <li>Después del borrado, refresca la lista o navega con <code>router.navigate(['/employees'])</code>.</li>
+                <li>Desactiva los botones mientras la petición está en vuelo (<code>signal&lt;boolean&gt;</code> <code>saving</code>).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="challenge">
+        <summary>
+          <span class="ch-num">04</span><span class="ch-title">Filtros y paginación</span>
+          <span class="ch-desc">Query params en el back; buscador y paginador en el front.</span>
+        </summary>
+        <div class="ch-body">
+          <div class="hint-grid">
+            <div class="hint">
+              <h5>Backend</h5>
+              <ul>
+                <li>Acepta <code>@RequestParam(required = false) String firstName</code>, <code>position</code>, etc.</li>
+                <li>Usa <code>Pageable</code> de Spring Data: el repo puede devolver <code>Page&lt;Employee&gt;</code> con totales y nº de páginas.</li>
+                <li>Para filtros sencillos, métodos derivados (<code>findByFirstNameIgnoreCase…</code>); para combinados, <code>@Query</code> o <code>Example</code>.</li>
+                <li>Devuelve metadatos de paginación (<code>page</code>, <code>size</code>, <code>totalElements</code>).</li>
+              </ul>
+            </div>
+            <div class="hint front">
+              <h5>Frontend</h5>
+              <ul>
+                <li>Guarda filtros y página actual como <code>signal()</code> y deriva la query con <code>computed()</code>.</li>
+                <li>Aplica <code>debounceTime(300)</code> al input de búsqueda (con <code>toObservable</code> o directamente con <code>FormControl</code>).</li>
+                <li>Empieza con un paginador simple: botones <em>anterior</em> / <em>siguiente</em> y contador “3 / 12”.</li>
+                <li>Sincroniza la URL con los filtros si quieres compartir enlaces (<code>queryParamsHandling: 'merge'</code>).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="challenge">
+        <summary>
+          <span class="ch-num">05</span><span class="ch-title">Segunda entidad relacionada</span>
+          <span class="ch-desc">Modela <code>Department</code> y relaciónalo con <code>Employee</code>.</span>
+        </summary>
+        <div class="ch-body">
+          <div class="hint-grid">
+            <div class="hint">
+              <h5>Backend</h5>
+              <ul>
+                <li>Decisión consciente: <strong>embed</strong> (guardar nombre del depto en el empleado) o <strong>referencia</strong> (<code>departmentId</code>). Documenta el porqué.</li>
+                <li>Crea entidad, repositorio, service y controlador siguiendo la misma estructura que <code>employees</code>.</li>
+                <li>Endpoint para listar departamentos (<code>GET /api/departments</code>) que el front usará en el selector.</li>
+                <li>Si vas por referencia, piensa en qué hacer si borras un departamento con empleados (¿error 409?).</li>
+              </ul>
+            </div>
+            <div class="hint front">
+              <h5>Frontend</h5>
+              <ul>
+                <li>Crea <code>features/departments/</code> con su modelo y servicio.</li>
+                <li>En el formulario de empleado, añade un <code>&lt;select&gt;</code> que cargue departamentos al inicializar.</li>
+                <li>En la tabla de empleados, muestra el nombre del departamento (resuélvelo en el back o crúzalo en el front).</li>
+                <li>Reutiliza tipos compartiendo el modelo (<code>Department</code>) entre features vía <code>shared/</code> si crece.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="challenge">
+        <summary>
+          <span class="ch-num">06</span><span class="ch-title">Mejoras transversales</span>
+          <span class="ch-desc">Toasts, más tests, perfiles dev/prod y autenticación.</span>
+        </summary>
+        <div class="ch-body">
+          <div class="hint-grid">
+            <div class="hint">
+              <h5>Backend</h5>
+              <ul>
+                <li>Perfiles: <code>application-dev.yml</code> y <code>application-prod.yml</code>; activa con <code>SPRING_PROFILES_ACTIVE</code>.</li>
+                <li>Spring Security + JWT: filtro que valide el token, <code>UserDetailsService</code> sencillo en memoria para empezar.</li>
+                <li>Sube cobertura: tests de happy path y casos límite (validación, 404, 409).</li>
+                <li>CORS distinto por perfil: en prod sólo orígenes conocidos.</li>
+              </ul>
+            </div>
+            <div class="hint front">
+              <h5>Frontend</h5>
+              <ul>
+                <li>Servicio de toasts global: un <code>signal&lt;Toast[]&gt;</code> y un componente que los pinte; el interceptor los dispara.</li>
+                <li><code>AuthGuard</code> con <code>CanActivateFn</code> que comprueba el token en <code>localStorage</code>.</li>
+                <li>Interceptor que inyecte <code>Authorization: Bearer ...</code> en cada petición.</li>
+                <li>Tests con <code>HttpTestingController</code> para asegurar que el interceptor mete la cabecera.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <div class="callout warn"><div class="ico">!</div><p>No hay solución oficial a propósito: la práctica consiste en implementar y comparar después en revisiones o con un mentor.</p></div>
+
+      <h3>Atajos útiles</h3>
+      <details>
+        <summary>URLs locales</summary>
+        <ul class="bullets" style="margin-top:.5rem;">
+          <li><a href="http://localhost:4200" target="_blank" rel="noopener">http://localhost:4200</a> — Angular</li>
+          <li><a href="http://localhost:8080/swagger-ui.html" target="_blank" rel="noopener">http://localhost:8080/swagger-ui.html</a> — Swagger</li>
+          <li><a href="http://localhost:8081" target="_blank" rel="noopener">http://localhost:8081</a> — Mongo Express (admin / admin)</li>
+        </ul>
+      </details>
+      <details>
+        <summary>Arranque rápido en 3 terminales</summary>
+        <pre><code># 1 — Raíz del repo
+docker compose up -d
+
+# 2 — Backend
+cd backend
+mvn spring-boot:run
+
+# 3 — Frontend
+cd frontend
+npm install
+ng serve</code></pre>
+        <p style="font-size:.85rem;color:var(--muted);margin:0;">Si no ves los 10 empleados, revisa el README: el seed sólo corre con la colección vacía; <code>docker compose down -v</code> resetea volúmenes.</p>
+      </details>
+    </section>
+  </main>
+
+  <footer class="endnote">
+    <div class="sig">Buena práctica, buen viaje.</div>
+    <div>Manual interactivo · proyecto-practica · abre <code>MANUAL.html</code> en el navegador para leer cómodamente.</div>
+  </footer>
+
+  <div class="fab" aria-hidden="false">
+    <button id="backTop" type="button" aria-label="Volver arriba" title="Volver arriba">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+    </button>
+    <button id="openMenu" class="fab-menu" type="button" aria-label="Abrir índice" aria-haspopup="dialog" aria-expanded="false" title="Índice">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
+    </button>
+  </div>
+
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+    <div class="drawer-head">
+      <h3 id="drawer-title">Navegación</h3>
+      <button class="drawer-close" id="drawerClose" aria-label="Cerrar índice">×</button>
+    </div>
+    <nav class="drawer-list" aria-label="Capítulos">
+      <a href="#proyecto"><span class="num">01</span> El proyecto en una imagen</a>
+      <a href="#instalar"><span class="num">02</span> Qué necesitas instalado</a>
+      <a href="#objetivos"><span class="num">03</span> Objetivos de aprendizaje</a>
+      <a href="#junior"><span class="num">04</span> Consejos si estás empezando</a>
+      <a href="#herramientas"><span class="num">05</span> Herramientas recomendadas</a>
+      <a href="#git"><span class="num">06</span> Trabajar con Git sin miedo</a>
+      <a href="#stack"><span class="num">07</span> Stack backend y frontend</a>
+      <a href="#retos"><span class="num">08</span> Retos paso a paso</a>
+    </nav>
+    <div class="drawer-foot">proyecto-practica · manual</div>
+  </aside>
+
+  <script>
+    (function () {
+      // Tabs
+      var tabs = document.querySelectorAll(".tab-btn");
+      var panels = document.querySelectorAll(".tab-panel");
+      tabs.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var id = btn.getAttribute("aria-controls");
+          tabs.forEach(function (b) { b.setAttribute("aria-selected", b === btn ? "true" : "false"); });
+          panels.forEach(function (p) {
+            var on = p.id === id;
+            p.classList.toggle("active", on);
+            p.hidden = !on;
+          });
+        });
+      });
+
+      // Drawer
+      var drawer = document.getElementById("drawer");
+      var backdrop = document.getElementById("drawerBackdrop");
+      var openBtn = document.getElementById("openMenu");
+      var closeBtn = document.getElementById("drawerClose");
+      function setDrawer(open) {
+        drawer.classList.toggle("open", open);
+        backdrop.classList.toggle("open", open);
+        openBtn.setAttribute("aria-expanded", open ? "true" : "false");
+        document.body.style.overflow = open ? "hidden" : "";
+      }
+      openBtn.addEventListener("click", function () { setDrawer(true); });
+      closeBtn.addEventListener("click", function () { setDrawer(false); });
+      backdrop.addEventListener("click", function () { setDrawer(false); });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") setDrawer(false);
+      });
+      drawer.querySelectorAll("a").forEach(function (a) {
+        a.addEventListener("click", function () { setDrawer(false); });
+      });
+
+      // Back to top
+      var backTop = document.getElementById("backTop");
+      window.addEventListener("scroll", function () {
+        backTop.classList.toggle("show", window.scrollY > 600);
+      }, { passive: true });
+      backTop.addEventListener("click", function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      // Active section highlight in drawer
+      var links = drawer.querySelectorAll("a[href^='#']");
+      var sections = Array.from(links).map(function (a) {
+        return document.querySelector(a.getAttribute("href"));
+      });
+      if ("IntersectionObserver" in window) {
+        var observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              links.forEach(function (l) {
+                l.classList.toggle("active", l.getAttribute("href") === "#" + entry.target.id);
+              });
+            }
+          });
+        }, { rootMargin: "-30% 0px -60% 0px", threshold: 0 });
+        sections.forEach(function (s) { if (s) observer.observe(s); });
+      }
+    })();
+  </script>
+</body>
+</html>
