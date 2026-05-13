@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDate;
 import java.util.List;
 
+import com.example.proyectopractica.common.EmployeeNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -43,5 +44,31 @@ class EmployeeControllerTest {
                 .andExpect(jsonPath("$[0].firstName").value("Ana"))
                 .andExpect(jsonPath("$[0].email").value("ana@example.com"))
                 .andExpect(jsonPath("$[1].position").value("Frontend Developer"));
+    }
+
+    @Test
+    void getEmployee_devuelve200() throws Exception{
+        when(service.findById("1")).thenReturn(
+                new EmployeeDto("1", "Ana", "García", "ana@example.com",
+                        "Backend Developer", LocalDate.of(2022, 3, 14))
+        );
+
+        mockMvc.perform(get("/api/employees/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.firstName").value("Ana"))
+                .andExpect(jsonPath("$.email").value("ana@example.com"))
+                .andExpect(jsonPath("$.position").value("Backend Developer"));
+    }
+
+    @Test
+    void getEmployee_devuelve404() throws Exception{
+        when(service.findById("11")).thenThrow(new EmployeeNotFoundException("Empleado no encontrado"));
+
+        mockMvc.perform(get("/api/employees/11"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message").value("Empleado no encontrado"));
     }
 }

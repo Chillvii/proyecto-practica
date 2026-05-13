@@ -1,11 +1,14 @@
 package com.example.proyectopractica.employees;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
+import com.example.proyectopractica.common.EmployeeNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -54,5 +57,38 @@ class EmployeeServiceTest {
                 .returns("1", EmployeeDto::id)
                 .returns("Ana", EmployeeDto::firstName)
                 .returns(LocalDate.of(2022, 3, 14), EmployeeDto::hiredAt);
+    }
+
+    @Test
+    void findById_devuelveEmpleadoDto() {
+
+        Employee ana = Employee.builder()
+                .id("1")
+                .firstName("Ana")
+                .lastName("García")
+                .email("ana@example.com")
+                .position("Backend Developer")
+                .hiredAt(LocalDate.of(2022, 3, 14))
+                .build();
+
+        when(repository.findById("1")).thenReturn(Optional.of(ana));
+
+        EmployeeDto result = service.findById("1");
+
+        assertThat(result)
+                .returns("1", EmployeeDto::id)
+                .returns("Ana", EmployeeDto::firstName)
+                .returns(LocalDate.of(2022, 3, 14), EmployeeDto::hiredAt);
+
+    }
+
+    @Test
+    void findById_404_EmpleadoNoEncontrado() {
+
+        when(repository.findById("1")).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.findById("1"))
+                .isInstanceOf(EmployeeNotFoundException.class);
+
     }
 }
