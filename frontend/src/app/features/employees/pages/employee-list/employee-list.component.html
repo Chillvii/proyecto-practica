@@ -21,6 +21,7 @@
           <th>Email</th>
           <th>Puesto</th>
           <th>Fecha de alta</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -31,6 +32,9 @@
             <td>{{ employee.email }}</td>
             <td>{{ employee.position }}</td>
             <td>{{ employee.hiredAt }}</td>
+            <button [routerLink]="['/employees', employee.id]" class="employee-list__button">
+              Ver detalle
+            </button>
           </tr>
         }
       </tbody>

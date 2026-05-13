@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
-
+import { Router } from '@angular/router';
 import { Employee } from '../../models/employee.model';
 import { EmployeesService } from '../../services/employees.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-employee-list',
@@ -9,9 +10,11 @@ import { EmployeesService } from '../../services/employees.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './employee-list.component.html',
   styleUrl: './employee-list.component.scss',
+  imports: [RouterModule]
 })
 export class EmployeeListComponent implements OnInit {
   private readonly service = inject(EmployeesService);
+  router = inject(Router);
 
   readonly employees = signal<Employee[]>([]);
   readonly loading = signal<boolean>(true);
@@ -31,4 +34,6 @@ export class EmployeeListComponent implements OnInit {
       },
     });
   }
+
+  
 }
