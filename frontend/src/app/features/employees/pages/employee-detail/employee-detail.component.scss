@@ -1,0 +1,66 @@
+.employee-detail {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+
+  &__header {
+    margin-bottom: 1.5rem;
+
+    h2 {
+      margin: 0 0 0.25rem;
+      font-size: 1.5rem;
+      color: #111827;
+    }
+  }
+
+  &__hint {
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.9rem;
+  }
+
+  &__status {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    color: #374151;
+
+    &--error {
+      background-color: #fef2f2;
+      border-color: #fecaca;
+      color: #b91c1c;
+    }
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+
+    thead {
+      background-color: #f3f4f6;
+    }
+
+    th,
+    td {
+      padding: 0.65rem 0.9rem;
+      text-align: left;
+      font-size: 0.95rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+  }
+}

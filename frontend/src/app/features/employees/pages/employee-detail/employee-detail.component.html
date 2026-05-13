@@ -1,0 +1,39 @@
+<section class="employee-detail">
+  <header class="employee-detail__header">
+    <h2>Empleado en detalle</h2>
+    <p class="employee-detail__hint">
+      Un empleado en detalle
+    </p>
+  </header>
+
+  @if (loading()) {
+    <p class="employee-detail__status">Cargando empleado…</p>
+  } @else if (error()) {
+    <p class="employee-detail__status employee-detail__status--error">{{ error() }}</p>
+  } @else if (notFound()) {
+    <p class="employee-detail__status">No hay un empleado con ese id en la base de datos.</p>
+  } @else {
+      <table class="employee-detail__table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Email</th>
+            <th>Puesto</th>
+            <th>Fecha de alta</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (employee()) {
+            <tr>
+              <td>{{ employee()?.firstName }}</td>
+              <td>{{ employee()?.lastName }}</td>
+              <td>{{ employee()?.email }}</td>
+              <td>{{ employee()?.position }}</td>
+              <td>{{ employee()?.hiredAt }}</td>
+            </tr>
+            }
+        </tbody>
+      </table>
+  }
+</section>
