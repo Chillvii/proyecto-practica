@@ -1,12 +1,12 @@
 package com.example.proyectopractica.employees;
 
+import java.net.URI;
 import java.util.List;
 
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,5 +32,11 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable String id){
         return ResponseEntity.ok(service.findById(id));
+    }
+
+    @PostMapping("/new")
+    public ResponseEntity<EmployeeDto> addEmployee(@Valid @RequestBody EmployeeDto request){
+        EmployeeDto dto = service.addEmployee(request);
+        return ResponseEntity.created(URI.create("/api/employees/"+dto.id())).body(dto);
     }
 }

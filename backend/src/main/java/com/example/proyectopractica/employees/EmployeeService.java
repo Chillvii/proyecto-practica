@@ -3,6 +3,7 @@ package com.example.proyectopractica.employees;
 import java.util.List;
 
 import com.example.proyectopractica.common.EmployeeNotFoundException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -24,5 +25,12 @@ public class EmployeeService {
         Employee employee = repository.findById(id)
                 .orElseThrow(()-> new EmployeeNotFoundException(id));
         return EmployeeMapper.toDto(employee);
+    }
+
+    public EmployeeDto addEmployee(EmployeeDto request){
+        if (repository.existsByEmail(request.email())){
+            throw new DuplicateKeyException(request.email());
+        }
+        return EmployeeMapper.toDto(repository.save(EmployeeMapper.toEntity(request)));
     }
 }

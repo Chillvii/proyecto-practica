@@ -2,6 +2,7 @@ package com.example.proyectopractica.employees;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.example.proyectopractica.common.EmployeeNotFoundException;
+import org.springframework.dao.DuplicateKeyException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -84,11 +86,60 @@ class EmployeeServiceTest {
 
     @Test
     void findById_404_EmpleadoNoEncontrado() {
-
         when(repository.findById("1")).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.findById("1"))
                 .isInstanceOf(EmployeeNotFoundException.class);
+    }
+
+    @Test
+    void addEmployee_201_EmpleadoCreado() {
+
+        Employee entity = new Employee(
+                "20",
+                "Antonio",
+                "Banderas",
+                "antonio_banderas@example.com",
+                "Backend Developer",
+                LocalDate.of(2025, 2, 25)
+        );
+
+        EmployeeDto request = new EmployeeDto(
+                "20",
+                "Antonio",
+                "Banderas",
+                "antonio_banderas@example.com",
+                "Backend Developer",
+                LocalDate.of(2025, 2, 25)
+        );
+
+        when(repository.save(any())).thenReturn(entity);
+
+        EmployeeDto result = service.addEmployee(request);
+
+        assertThat(result)
+                .returns("Antonio", EmployeeDto::firstName)
+                .returns("Banderas", EmployeeDto::lastName)
+                .returns("antonio_banderas@example.com", EmployeeDto::email)
+                .returns(LocalDate.of(2025, 2, 25), EmployeeDto::hiredAt);
+    }
+
+    @Test
+    void addEmployee_409_EmpleadoCreado() {
+
+        EmployeeDto request = new EmployeeDto(
+                "20",
+                "Antonio",
+                "Banderas",
+                "ana@example.com",
+                "Backend Developer",
+                LocalDate.of(2025, 2, 25)
+        );
+
+        when(repository.existsByEmail("ana@example.com")).thenReturn(true);
+
+        assertThatThrownBy(() -> service.addEmployee(request))
+                .isInstanceOf(DuplicateKeyException.class);
 
     }
 }
