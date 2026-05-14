@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { API_URL } from '../../../core/tokens/api-url.token';
-import { Employee } from '../models/employee.model';
+import { Employee , EmployeeAdd } from '../models/employee.model';
 
 /**
  * Cliente HTTP del recurso /employees.
@@ -22,5 +22,9 @@ export class EmployeesService {
 
   getById(id: String): Observable<Employee> {
     return this.http.get<Employee>(`${this.apiUrl}/employees/${id}`)
+  }
+
+  create(employee: EmployeeAdd){
+    return this.http.post<EmployeeAdd>(`${this.apiUrl}/employees/new`,employee);
   }
 }

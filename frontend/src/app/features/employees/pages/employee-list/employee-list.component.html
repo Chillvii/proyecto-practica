@@ -21,7 +21,9 @@
           <th>Email</th>
           <th>Puesto</th>
           <th>Fecha de alta</th>
-          <th></th>
+          <th>
+            <button [routerLink]="['/employees/new']" class="employee-list__button--add"> + </button>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -32,9 +34,11 @@
             <td>{{ employee.email }}</td>
             <td>{{ employee.position }}</td>
             <td>{{ employee.hiredAt }}</td>
-            <button [routerLink]="['/employees', employee.id]" class="employee-list__button">
-              Ver detalle
-            </button>
+            <td>
+              <button [routerLink]="['/employees', employee.id]" class="employee-list__button--detail">
+                <img src="assets/lupa.svg" alt="Detalle" class="employee-list__icono">
+              </button>
+            </td>
           </tr>
         }
       </tbody>

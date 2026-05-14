@@ -12,3 +12,12 @@ export interface Employee {
   position: string;
   hiredAt: string;
 }
+
+export interface EmployeeAdd {
+  firstName: string;
+  lastName: string;
+  email: string;
+  position: string;
+  hiredAt: string;
+}
+

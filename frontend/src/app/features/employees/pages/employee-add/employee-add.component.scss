@@ -1,0 +1,81 @@
+.employee-add {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+
+  &__header {
+    margin-bottom: 1.5rem;
+
+    h2 {
+      margin: 0 0 0.25rem;
+      font-size: 1.5rem;
+      color: #111827;
+    }
+  }
+
+  &__hint {
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.9rem;
+  }
+
+  &__status {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    color: #374151;
+
+    &--error {
+      background-color: #fef2f2;
+      border-color: #fecaca;
+      color: #b91c1c;
+    }
+  }
+  
+  fieldset {
+    border: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+  label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+  }
+
+  input {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    transition: 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
+    }
+  }
+
+  button {
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+
+  p {
+    font-size: 12px;
+    margin: 0;
+  }
+}

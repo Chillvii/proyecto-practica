@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from "@angular/core";
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 
 import { Employee } from '../../models/employee.model';
 import { EmployeesService } from '../../services/employees.service';
@@ -8,6 +8,7 @@ import { EmployeesService } from '../../services/employees.service';
   selector: 'app-employee-detail',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterModule],
   templateUrl: './employee-detail.component.html',
   styleUrl: './employee-detail.component.scss',
 })

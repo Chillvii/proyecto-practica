@@ -71,5 +71,25 @@
     &:hover{
       background-color: #c9c7c7;
     }
+
+     &--add{
+      background-color: #8dd1a4;
+      &:hover{
+        background-color: #79b48d;
+      }
+    }
+
+    &--detail{
+      background-color: #8ab5e6;
+      &:hover{
+        background-color: #719dcf;
+      }
+    }
+
+  }
+
+  &__icono {  
+    width: 8px;
+    height: 8px;
   }
 }
