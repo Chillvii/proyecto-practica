@@ -32,9 +32,11 @@
             <td>{{ employee.email }}</td>
             <td>{{ employee.position }}</td>
             <td>{{ employee.hiredAt }}</td>
-            <button [routerLink]="['/employees', employee.id]" class="employee-list__button">
-              Ver detalle
-            </button>
+            <td>
+              <button [routerLink]="['/employees', employee.id]" class="employee-list__button">
+                <img src="assets/lupa.svg" alt="Detalle" class="employee-list__icono">
+              </button>
+            </td>
           </tr>
         }
       </tbody>
