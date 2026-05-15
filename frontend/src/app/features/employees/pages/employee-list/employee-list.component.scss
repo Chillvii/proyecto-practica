@@ -66,23 +66,26 @@
 
   &__button {
     background-color: #dfdddd;
-    border-radius: 5px;
     margin-top: 15%;
     &:hover{
       background-color: #c9c7c7;
     }
 
      &--add{
-      background-color: #8dd1a4;
+      background-color: #43eb7b;
+      border-width: 1px;
+      border-radius: 5px;
       &:hover{
-        background-color: #79b48d;
+        background-color: #33c263;
       }
     }
 
     &--detail{
-      background-color: #8ab5e6;
+      background-color: #4aa0fc;
+      border-width: 1px;
+      border-radius: 5px;
       &:hover{
-        background-color: #719dcf;
+        background-color: #2872c2;
       }
     }
 

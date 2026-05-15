@@ -32,6 +32,13 @@
       border-color: #fecaca;
       color: #b91c1c;
     }
+
+    &--errorDuplicado {
+        background-color: #fecaca;
+        border-color: #b91c1c;
+        color: #b91c1c;
+        font-weight: bold;
+    }
   }
   
   fieldset {
@@ -59,23 +66,37 @@
     }
   }
 
-  button {
+  &__botonAdd {
+    margin-top: 10px;
     padding: 10px;
     border-radius: 5px;
-    border: none;
-    background-color: #007bff;
+    border-width: 1px;
+    background-color: #4aa0fc;
     color: white;
     font-weight: 600;
     cursor: pointer;
     transition: 0.2s;
 
     &:hover {
-      background-color: #0056b3;
+      background-color: #2872c2;
     }
   }
 
   p {
     font-size: 12px;
     margin: 0;
+  }
+
+  &__botonReturn {
+    padding: 5px;
+      border-width: 1px;
+      background-color: #4aa0fc;
+      border-radius: 5px;
+      color: white;
+      transition: 0.2s;
+
+      &:hover {
+        background-color: #2872c2;
+      }
   }
 }

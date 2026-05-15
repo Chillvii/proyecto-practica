@@ -1,5 +1,5 @@
 <section class="employee-detail">
-  <button [routerLink]="['']" class="employee-detail__button--back"> ← </button>
+  <button [routerLink]="['']" class="employee-detail__button--return"> ← </button>
   <header class="employee-detail__header">
     <h2>Empleado en detalle</h2>
     <p class="employee-detail__hint">
@@ -34,8 +34,9 @@
               <td>{{ employee()?.position }}</td>
               <td>{{ employee()?.hiredAt }}</td>
               <td>
-              <button [routerLink]="['/employees', employee()?.id]" class="employee-detail__button--detail">
-                <img src="assets/lupa.svg" alt="Detalle" class="employee-detail__icono">
+              <button [routerLink]="['/employees', employee()?.id]" class="employee-detail__button--edit">
+                edit
+                <!-- <img src="assets/lupa.svg" alt="Detalle" class="employee-detail__icono"> -->
               </button>
             </td>
             </tr>

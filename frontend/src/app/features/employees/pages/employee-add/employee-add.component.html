@@ -1,5 +1,6 @@
 <section class="employee-add">
     <header class="employee-add">
+        <button [routerLink]="['']" class="employee-add__botonReturn"> ← </button>
         <h2>Formulario empleado</h2>
     </header>
     <form [formGroup]="employeeForm" class="__formulario">
@@ -52,11 +53,11 @@
             <input type="date" [max]="getTodayDate()" formControlName="hiredAt"><br />
             
             @if (errorMessage) {
-            <p class="employee-add__status employee-add__status--error">
+            <p class="employee-add__status employee-add__status--errorDuplicado">
                 {{ errorMessage }}
             </p>
             }
-            <button type="button" (click)="create()">
+            <button type="button" (click)="create()" class="employee-add__botonAdd">
                 Crear empleado
             </button>
 
