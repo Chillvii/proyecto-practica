@@ -20,11 +20,19 @@ export class EmployeesService {
     return this.http.get<Employee[]>(`${this.apiUrl}/employees`);
   }
 
-  getById(id: String): Observable<Employee> {
+  getById(id: string): Observable<Employee> {
     return this.http.get<Employee>(`${this.apiUrl}/employees/${id}`)
   }
 
   create(employee: EmployeeAdd){
     return this.http.post<EmployeeAdd>(`${this.apiUrl}/employees/new`,employee);
+  }
+
+  update(id: string , employee: EmployeeAdd){
+    return this.http.put<Employee>(`${this.apiUrl}/employees/${id}`,employee);
+  }
+
+  delete(id: string){
+    return this.http.delete(`${this.apiUrl}/employees/${id}`);
   }
 }

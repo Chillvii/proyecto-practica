@@ -89,6 +89,15 @@
       }
     }
 
+    &--edit{
+      background-color: #fcbe4a;
+      border-width: 1px;
+      border-radius: 5px;
+      &:hover{
+        background-color: #d49d35;
+      }
+    }
+
   }
 
   &__icono {  
