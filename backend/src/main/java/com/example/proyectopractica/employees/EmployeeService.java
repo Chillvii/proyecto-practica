@@ -33,4 +33,28 @@ public class EmployeeService {
         }
         return EmployeeMapper.toDto(repository.save(EmployeeMapper.toEntity(request)));
     }
+
+    public EmployeeDto updateEmployee(String id,EmployeeDto request){
+        Employee employee = repository.findById(id)
+                .orElseThrow(()-> new EmployeeNotFoundException(id));
+
+        if (repository.existsByEmail(request.email())
+                && !employee.getEmail().equals(request.email())) {
+            throw new DuplicateKeyException(request.email());
+        }
+
+        employee.setFirstName(request.firstName());
+        employee.setLastName(request.lastName());
+        employee.setEmail(request.email());
+        employee.setPosition(request.position());
+        //employee.setHiredAt(request.hiredAt());
+
+        return EmployeeMapper.toDto(repository.save(employee));
+    }
+
+    public void deleteEmployee(String id){
+        Employee employee = repository.findById(id)
+                .orElseThrow(()-> new EmployeeNotFoundException(id));
+        repository.delete(employee);
+    }
 }

@@ -3,6 +3,7 @@ package com.example.proyectopractica.employees;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -141,5 +142,101 @@ class EmployeeServiceTest {
         assertThatThrownBy(() -> service.addEmployee(request))
                 .isInstanceOf(DuplicateKeyException.class);
 
+    }
+
+    @Test
+    void updateEmployee_200_OK() {
+
+        Employee existing = Employee.builder()
+                .id("20")
+                .firstName("Antonio")
+                .lastName("Banderas")
+                .email("antonio@example.com")
+                .position("Backend Developer")
+                .hiredAt(LocalDate.of(2022, 3, 14))
+                .build();
+
+        EmployeeDto request = new EmployeeDto(
+                "20",
+                "Antonio",
+                "Banderas",
+                "antonio@example.com",
+                "Frontend Developer",
+                LocalDate.of(2025, 2, 25)
+        );
+
+        when(repository.findById("20")).thenReturn(Optional.of(existing));
+        when(repository.existsByEmail("antonio@example.com")).thenReturn(false);
+        when(repository.save(any())).thenReturn(existing);
+
+        EmployeeDto result = service.updateEmployee("20", request);
+
+        assertThat(result)
+                .returns("Antonio", EmployeeDto::firstName)
+                .returns("Banderas", EmployeeDto::lastName);
+    }
+
+    @Test
+    void updateEmployee_404_NoExiste() {
+
+        EmployeeDto request = new EmployeeDto(
+                "20",
+                "Antonio",
+                "Banderas",
+                "antonio@example.com",
+                "Frontend Developer",
+                LocalDate.of(2025, 2, 25)
+        );
+
+        when(repository.findById("20")).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.updateEmployee("20", request))
+                .isInstanceOf(EmployeeNotFoundException.class);
+    }
+
+    @Test
+    void updateEmployee_409_EmailDuplicado() {
+
+        Employee existing = Employee.builder()
+                .id("20")
+                .email("antonio@example.com")
+                .build();
+
+        EmployeeDto request = new EmployeeDto(
+                "20",
+                "Antonio",
+                "Banderas",
+                "ana@example.com",
+                "Backend Developer",
+                LocalDate.of(2025, 2, 25)
+        );
+
+        when(repository.findById("20")).thenReturn(Optional.of(existing));
+        when(repository.existsByEmail("ana@example.com")).thenReturn(true);
+
+        assertThatThrownBy(() -> service.updateEmployee("20", request))
+                .isInstanceOf(DuplicateKeyException.class);
+    }
+
+    @Test
+    void deleteEmployee_204_OK() {
+
+        Employee existing = Employee.builder()
+                .id("20")
+                .build();
+
+        when(repository.findById("20")).thenReturn(Optional.of(existing));
+        doNothing().when(repository).delete(existing);
+
+        service.deleteEmployee("20");
+    }
+
+    @Test
+    void deleteEmployee_404_NoExiste() {
+
+        when(repository.findById("20")).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.deleteEmployee("20"))
+                .isInstanceOf(EmployeeNotFoundException.class);
     }
 }

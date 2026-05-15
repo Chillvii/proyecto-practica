@@ -39,4 +39,15 @@ public class EmployeeController {
         EmployeeDto dto = service.addEmployee(request);
         return ResponseEntity.created(URI.create("/api/employees/"+dto.id())).body(dto);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable String id, @Valid @RequestBody EmployeeDto request){
+        return ResponseEntity.ok(service.updateEmployee(id,request));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEmployee(@PathVariable String id){
+        service.deleteEmployee(id);
+        return ResponseEntity.noContent().build();
+    }
 }

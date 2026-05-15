@@ -2,10 +2,8 @@ package com.example.proyectopractica.employees;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -52,7 +50,7 @@ class EmployeeControllerTest {
     }
 
     @Test
-    void getEmployee_devuelve200() throws Exception{
+    void getEmployee_devuelve200() throws Exception {
         when(service.findById("1")).thenReturn(
                 new EmployeeDto("1", "Ana", "García", "ana@example.com",
                         "Backend Developer", LocalDate.of(2022, 3, 14))
@@ -65,18 +63,18 @@ class EmployeeControllerTest {
                 .andExpect(jsonPath("$.firstName").value("Ana"))
                 .andExpect(jsonPath("$.email").value("ana@example.com"))
                 .andExpect(jsonPath("$.position").value("Backend Developer"));
-                //.andDo(print());
+        //.andDo(print());
     }
 
     @Test
-    void getEmployee_devuelve404() throws Exception{
-        when(service.findById("11")).thenThrow(new EmployeeNotFoundException("Empleado no encontrado"));
+    void getEmployee_devuelve404() throws Exception {
+        when(service.findById("11")).thenThrow(new EmployeeNotFoundException("11"));
 
         mockMvc.perform(get("/api/employees/11"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.message").value("Empleado no encontrado"));
-                //.andDo(print());
+                .andExpect(jsonPath("$.message").value("Empleado con id 11 no encontrado"));
+        //.andDo(print());
     }
 
     @Test
@@ -103,12 +101,12 @@ class EmployeeControllerTest {
                 .andExpect(jsonPath("$.lastName").value("Banderas"))
                 .andExpect(jsonPath("$.email").value("antonio_banderas@example.com"))
                 .andExpect(jsonPath("$.position").value("Backend Developer"));
-                //.andDo(print());
+        //.andDo(print());
     }
 
     @Test
     void addEmployee_devuelve409() throws Exception {
-        EmployeeDto employee1= new EmployeeDto("1", "Ana", "García", "ana@example.com",
+        EmployeeDto employee1 = new EmployeeDto("1", "Ana", "García", "ana@example.com",
                 "Backend Developer", LocalDate.of(2022, 3, 14));
 
         EmployeeDto employee2 = new EmployeeDto("20", "Antonio", "Banderas"
@@ -128,6 +126,97 @@ class EmployeeControllerTest {
                                 """))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.message").value("Recurso duplicado: Email duplicado"));
-                //.andDo(print());
+        //.andDo(print());
+    }
+
+    @Test
+    void updateEmployee_devuelve200() throws Exception {
+        EmployeeDto updated = new EmployeeDto(
+                "20",
+                "Antonio",
+                "Banderas",
+                "antonio@example.com",
+                "Frontend Developer",
+                LocalDate.of(2025, 2, 25)
+        );
+
+        when(service.updateEmployee(any(), any())).thenReturn(updated);
+
+        mockMvc.perform(put("/api/employees/20")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                    {
+                                      "firstName": "Antonio",
+                                      "lastName": "Banderas",
+                                      "email": "antonio@example.com",
+                                      "position": "Frontend Developer"
+                                    }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName").value("Antonio"))
+                .andExpect(jsonPath("$.lastName").value("Banderas"))
+                .andExpect(jsonPath("$.email").value("antonio@example.com"))
+                .andExpect(jsonPath("$.position").value("Frontend Developer"));
+    }
+
+    @Test
+    void updateEmployee_devuelve409() throws Exception{
+        when(service.updateEmployee(any(), any()))
+                .thenThrow(new DuplicateKeyException("Email duplicado"));
+
+        mockMvc.perform(put("/api/employees/20")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                    {
+                                      "firstName": "Antonio",
+                                      "lastName": "Banderas",
+                                      "email": "ana@example.com",
+                                      "position": "Backend Developer"
+                                    }
+                                """))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.message")
+                        .value("Recurso duplicado: Email duplicado"));
+    }
+
+    @Test
+    void updateEmployee_devuelve404() throws Exception {
+        when(service.updateEmployee(any(), any()))
+                .thenThrow(new EmployeeNotFoundException("20"));
+
+        mockMvc.perform(put("/api/employees/20")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                    {
+                                      "firstName": "Antonio",
+                                      "lastName": "Banderas",
+                                      "email": "antonio@example.com",
+                                      "position": "Backend Developer"
+                                    }
+                                """))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message")
+                        .value("Empleado con id 20 no encontrado"));
+    }
+
+    @Test
+    void deleteEmployee_devuelve204() throws Exception {
+        doNothing().when(service).deleteEmployee("20");
+        mockMvc.perform(delete("/api/employees/20"))
+                .andExpect(status().isNoContent());
+
+        verify(service).deleteEmployee("20");
+    }
+
+    @Test
+    void deleteEmployee_devuelve404() throws Exception {
+        doThrow(new EmployeeNotFoundException("20"))
+                .when(service).deleteEmployee("20");
+
+        mockMvc.perform(delete("/api/employees/20"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message")
+                        .value("Empleado con id 20 no encontrado"));
+
     }
 }

@@ -55,7 +55,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EmployeeNotFoundException.class)
     public  ResponseEntity<ApiError> handleEmployeeNotFound(EmployeeNotFoundException ex, HttpServletRequest request) {
-        return build(HttpStatus.NOT_FOUND,ex.getMessage(), request, null);
+        return build(HttpStatus.NOT_FOUND,"Empleado con id "+ ex.getMessage() + " no encontrado", request,
+                null);
     }
 
     private ResponseEntity<ApiError> build(HttpStatus status, String message, HttpServletRequest request,
