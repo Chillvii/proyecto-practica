@@ -4,45 +4,33 @@
     <p class="employee-list__hint">
       Listado simple. Tu siguiente reto: añade detalle, alta, edición y borrado.
     </p>
-
     @if (editingId && (employeeForm.invalid || errorMessage !== null)) {
-
     <div class="employee-list__errors-box">
-
       <strong>Corrige los siguientes errores:</strong>
-
       <ul>
-
         <!-- Nombre -->
         @if (employeeForm.get('firstName')?.errors?.['required']) {
         <li>El nombre es obligatorio</li>
         }
-
         <!-- Apellido -->
         @if (employeeForm.get('lastName')?.errors?.['required']) {
         <li>El apellido es obligatorio</li>
         }
-
         <!-- Email -->
         @if (employeeForm.get('email')?.errors?.['required']) {
         <li>El email es obligatorio</li>
-
         } @else if (employeeForm.get('email')?.errors?.['email']) {
         <li>Formato de email inválido</li>
         }
-
         <!-- Puesto -->
         @if (employeeForm.get('position')?.errors?.['required']) {
         <li>El puesto es obligatorio</li>
         }
-
         <!-- Error backend -->
         @if (submitted && errorMessage !== null) {
         <li>{{ errorMessage }}</li>
         }
-
       </ul>
-
     </div>
     }
   </header>
@@ -64,7 +52,7 @@
           <th>Puesto</th>
           <th>Fecha de alta</th>
           <th>
-            <button [routerLink]="['/employees/new']" class="employee-list__button--add"> + </button>
+            <button [routerLink]="['/employees/new']" class="employee-list__button"> + </button>
           </th>
         </tr>
       </thead>
@@ -76,10 +64,10 @@
           <td><input formControlName="lastName"></td>
           <td><input formControlName="email"></td>
           <td><input formControlName="position"></td>
-          <td><input type="date" formControlName="hiredAt"></td>
+          <td>{{ employee.hiredAt }}</td>
           <td>
-            <button type="button" (click)="save(employee.id)">Guardar</button>
-            <button type="button" (click)="cancelEdit()">Cancelar</button>
+            <button type="button" (click)="save(employee.id)" [disabled]="saving()" class="employee-list__button">✓</button>
+            <button type="button" (click)="cancelEdit()" [disabled]="saving()" class="employee-list__button">X</button>
           </td>
           } @else {
           <td>{{ employee.firstName }}</td>
@@ -91,8 +79,11 @@
             <button (click)="edit(employee)" class="employee-list__button--edit">
               <img src="assets/edit.svg" alt="Editar" class="employee-list__icono">
             </button>
-            <button [routerLink]="['/employees', employee.id]" class="employee-list__button--detail">
+            <button [routerLink]="['/employees', employee.id]" class="employee-list__button">
               <img src="assets/lupa.svg" alt="Ver" class="employee-list__icono">
+            </button>
+            <button (click)="delete(employee.id)" class="employee-list__button--delete">
+              <img src="assets/delete.svg" alt="Ver" class="employee-list__icono">
             </button>
           </td>
           }
@@ -102,4 +93,15 @@
     </table>
   </form>
   }
+  @if (showDeleteModal) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <h3>¿Seguro que quieres borrar este empleado?</h3>
+      <div class="modal__actions">
+        <button (click)="confirmDelete()">Eliminar</button>
+        <button (click)="showDeleteModal = false">Cancelar</button>
+      </div>
+    </div>
+  </div>
+}
 </section>

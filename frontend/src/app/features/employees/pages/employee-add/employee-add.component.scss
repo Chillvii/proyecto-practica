@@ -88,11 +88,11 @@
   }
 
   &__botonReturn {
-    padding: 5px;
       border-width: 1px;
       background-color: #4aa0fc;
       border-radius: 5px;
-      color: white;
+      border: none;
+      color: rgb(255, 255, 255);
       transition: 0.2s;
 
       &:hover {

@@ -15,14 +15,20 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 })
 export class EmployeeListComponent implements OnInit {
   private readonly service = inject(EmployeesService);
-  editingId: string | null = null;
   readonly employees = signal<Employee[]>([]);
   readonly loading = signal<boolean>(true);
   readonly error = signal<string | null>(null);
 
+  //modificar
+  editingId: string | null = null;
   private fb = inject(FormBuilder);
   errorMessage: string | null = null;
   submitted = false;
+  saving = signal(false);
+
+  //borrar
+  showDeleteModal = false;
+  selectedId: string | null = null;
 
   getTodayDate(): string {
     return new Date().toISOString().substring(0, 10);
@@ -70,16 +76,21 @@ export class EmployeeListComponent implements OnInit {
       this.employeeForm.markAllAsTouched();
       return;
     }
+
+    this.saving.set(true);
+
     const data = this.employeeForm.getRawValue() as EmployeeAdd;
     this.service.update(id, data).subscribe({
       next: () => {
         this.editingId = null;
         this.errorMessage = null;
         this.submitted = false;
+        this.saving.set(false);
         this.loadEmployees();
       },
 
       error: (err) => {
+        this.saving.set(false);
         if (err.status === 409) {
           this.errorMessage = 'Ya existe un empleado con ese email.';
         } else {
@@ -91,9 +102,34 @@ export class EmployeeListComponent implements OnInit {
   }
 
   cancelEdit() {
-    this.employeeForm.reset();
     this.editingId = null;
+    this.employeeForm.reset();
     this.submitted = false;
     this.errorMessage = null;
+    this.saving.set(false);
+  }
+
+  delete(employeeId: string) {
+  /*   if (!confirm('¿Seguro que quieres borrarlo?')) {
+      return;
+    }
+    this.service.delete(employeeId).subscribe(() => {
+      this.loadEmployees();
+    }); */
+    
+  this.selectedId = employeeId;
+  this.showDeleteModal = true;
+  }
+
+  confirmDelete() {
+  if (!this.selectedId) return;
+
+  this.service.delete(this.selectedId).subscribe({
+    next: () => {
+      this.loadEmployees();
+      this.showDeleteModal = false;
+      this.selectedId = null;
+    }
+  });
   }
 }

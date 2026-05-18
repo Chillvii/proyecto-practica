@@ -1,47 +1,100 @@
 <section class="employee-detail">
-  <button [routerLink]="['']" class="employee-detail__button--return"> ← </button>
+  <button [routerLink]="['']" class="employee-detail__button--return">←</button>
   <header class="employee-detail__header">
     <h2>Empleado en detalle</h2>
     <p class="employee-detail__hint">
       Un empleado en detalle
     </p>
+    @if (employeeForm.invalid || errorMessage !== null) {
+    <div class="employee-detail__errors-box">
+      <strong>Corrige los siguientes errores:</strong>
+      <ul>
+        @if (employeeForm.get('firstName')?.errors?.['required']) {
+        <li>El nombre es obligatorio</li>
+        }
+        @if (employeeForm.get('lastName')?.errors?.['required']) {
+        <li>El apellido es obligatorio</li>
+        }
+        @if (employeeForm.get('email')?.errors?.['required']) {
+        <li>El email es obligatorio</li>
+        } @else if (employeeForm.get('email')?.errors?.['email']) {
+        <li>Formato de email inválido</li>
+        }
+        @if (employeeForm.get('position')?.errors?.['required']) {
+        <li>El puesto es obligatorio</li>
+        }
+        @if (submitted && errorMessage !== null) {
+        <li>{{ errorMessage }}</li>
+        }
+      </ul>
+    </div>
+    }
   </header>
-
   @if (loading()) {
-    <p class="employee-detail__status">Cargando empleado…</p>
+  <p class="employee-detail__status">Cargando empleado…</p>
   } @else if (error()) {
-    <p class="employee-detail__status employee-detail__status--error">{{ error() }}</p>
+  <p class="employee-detail__status employee-detail__status--error">
+    {{ error() }}
+  </p>
   } @else if (notFound()) {
-    <p class="employee-detail__status">No hay un empleado con ese id en la base de datos.</p>
-  } @else {
-      <table class="employee-detail__table">
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Email</th>
-            <th>Puesto</th>
-            <th>Fecha de alta</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          @if (employee()) {
-            <tr>
-              <td>{{ employee()?.firstName }}</td>
-              <td>{{ employee()?.lastName }}</td>
-              <td>{{ employee()?.email }}</td>
-              <td>{{ employee()?.position }}</td>
-              <td>{{ employee()?.hiredAt }}</td>
-              <td>
-              <button [routerLink]="['/employees', employee()?.id]" class="employee-detail__button--edit">
-                edit
-                <!-- <img src="assets/lupa.svg" alt="Detalle" class="employee-detail__icono"> -->
-              </button>
-            </td>
-            </tr>
-            }
-        </tbody>
-      </table>
+  <p class="employee-detail__status">
+    No hay un empleado con ese id en la base de datos.
+  </p>
+  } @else if (employee()) {
+  <form [formGroup]="employeeForm">
+    <table class="employee-detail__table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Email</th>
+          <th>Puesto</th>
+          <th>Fecha de alta</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          @if (isEditing) {
+          <td><input formControlName="firstName"></td>
+          <td><input formControlName="lastName"></td>
+          <td><input formControlName="email"></td>
+          <td><input formControlName="position"></td>
+          <td>{{ employee()?.hiredAt }}</td>
+          <td>
+            <button type="button" (click)="save()" class="employee-detail__button">✓</button>
+            <button type="button" (click)="cancelEdit()" class="employee-detail__button">X</button>
+          </td>
+          } @else {
+          <td>{{ employee()?.firstName }}</td>
+          <td>{{ employee()?.lastName }}</td>
+          <td>{{ employee()?.email }}</td>
+          <td>{{ employee()?.position }}</td>
+          <td>{{ employee()?.hiredAt }}</td>
+          <td>
+            <button type="button" (click)="edit()" class="employee-detail__button--edit">
+              <img src="assets/edit.svg" alt="editar" class="employee-detail__icono">
+            </button>
+            <button type="button" (click)="delete()" class="employee-detail__button--delete">
+              <img src="assets/delete.svg" alt="borrar" class="employee-detail__icono">
+            </button>
+          </td>
+          }
+        </tr>
+      </tbody>
+    </table>
+  </form>
+  }
+
+  @if (showDeleteModal) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <h3>¿Seguro que quieres borrar el empleado?</h3>
+      <div class="modal__actions">
+        <button (click)="confirmDelete()">Eliminar</button>
+        <button (click)="showDeleteModal = false">Cancelar</button>
+      </div>
+    </div>
+  </div>
   }
 </section>
