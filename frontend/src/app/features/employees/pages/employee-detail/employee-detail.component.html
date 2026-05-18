@@ -62,8 +62,8 @@
           <td><input formControlName="position"></td>
           <td>{{ employee()?.hiredAt }}</td>
           <td>
-            <button type="button" (click)="save()" class="employee-detail__button">✓</button>
-            <button type="button" (click)="cancelEdit()" class="employee-detail__button">X</button>
+            <button type="button" (click)="save()" [disabled]="saving()" class="employee-detail__button">✓</button>
+            <button type="button" (click)="cancelEdit()" [disabled]="saving()" class="employee-detail__button">X</button>
           </td>
           } @else {
           <td>{{ employee()?.firstName }}</td>

@@ -110,13 +110,6 @@ export class EmployeeListComponent implements OnInit {
   }
 
   delete(employeeId: string) {
-  /*   if (!confirm('¿Seguro que quieres borrarlo?')) {
-      return;
-    }
-    this.service.delete(employeeId).subscribe(() => {
-      this.loadEmployees();
-    }); */
-    
   this.selectedId = employeeId;
   this.showDeleteModal = true;
   }

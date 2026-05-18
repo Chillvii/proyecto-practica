@@ -103,7 +103,6 @@ export class EmployeeDetailComponent implements OnInit{
       },
       error: (err) => {
         this.saving.set(false);
-
         if (err.status === 409) {
           this.errorMessage = 'Ya existe un empleado con ese email.';
         } else {
@@ -121,6 +120,7 @@ export class EmployeeDetailComponent implements OnInit{
     this.isEditing = false;
     this.submitted = false;
     this.errorMessage = null;
+    this.saving.set(false);
   }
 
   delete() {
