@@ -30,12 +30,18 @@ export class EmployeeListComponent implements OnInit {
     hiredAt: ['']
   });
 
-
+  loadEmployees() {
+    this.service.getAll().subscribe({
+      next: (data) => {
+        this.employees.set(data);
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.service.getAll().subscribe({
       next: (data) => {
-        this.employees.set(data);
+        this.loadEmployees();
         this.loading.set(false);
       },
       error: () => {
@@ -50,14 +56,6 @@ export class EmployeeListComponent implements OnInit {
   edit(employee: Employee) {
     this.editingId = employee.id;
     this.employeeForm.patchValue(employee);
-  }
-
-  loadEmployees() {
-    this.service.getAll().subscribe({
-      next: (data) => {
-        this.employees.set(data);
-      }
-    });
   }
 
   save(id: string) {
