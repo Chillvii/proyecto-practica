@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@ang
 import { RouterModule } from '@angular/router';
 import { Employee, EmployeeAdd } from '../../models/employee.model';
 import { EmployeesService } from '../../services/employees.service';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-employee-list',
@@ -19,15 +19,21 @@ export class EmployeeListComponent implements OnInit {
   readonly employees = signal<Employee[]>([]);
   readonly loading = signal<boolean>(true);
   readonly error = signal<string | null>(null);
-  
+
   private fb = inject(FormBuilder);
+  errorMessage: string | null = null;
+  submitted = false;
+
+  getTodayDate(): string {
+    return new Date().toISOString().substring(0, 10);
+  }
 
   employeeForm = this.fb.group({
-    firstName: [''],
-    lastName: [''],
-    email: [''],
-    position: [''],
-    hiredAt: ['']
+    firstName: ['', Validators.required],
+    lastName: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    position: ['', Validators.required],
+    hiredAt: [this.getTodayDate()]
   });
 
   loadEmployees() {
@@ -59,18 +65,35 @@ export class EmployeeListComponent implements OnInit {
   }
 
   save(id: string) {
-  const data = this.employeeForm.getRawValue() as EmployeeAdd;
+    this.submitted = true;
+    if (this.employeeForm.invalid) {
+      this.employeeForm.markAllAsTouched();
+      return;
+    }
+    const data = this.employeeForm.getRawValue() as EmployeeAdd;
     this.service.update(id, data).subscribe({
       next: () => {
         this.editingId = null;
-
+        this.errorMessage = null;
+        this.submitted = false;
         this.loadEmployees();
+      },
+
+      error: (err) => {
+        if (err.status === 409) {
+          this.errorMessage = 'Ya existe un empleado con ese email.';
+        } else {
+          this.errorMessage = 'Error al actualizar el empleado.';
+        }
       }
+
     });
   }
 
   cancelEdit() {
     this.employeeForm.reset();
     this.editingId = null;
+    this.submitted = false;
+    this.errorMessage = null;
   }
 }
