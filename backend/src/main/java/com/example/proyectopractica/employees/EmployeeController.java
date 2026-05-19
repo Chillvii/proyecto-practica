@@ -1,9 +1,12 @@
 package com.example.proyectopractica.employees;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,5 +52,17 @@ public class EmployeeController {
     public ResponseEntity<Void> deleteEmployee(@PathVariable String id){
         service.deleteEmployee(id);
         return ResponseEntity.noContent().build();
+    }
+
+    //filtros por nombre y posicion
+    @GetMapping
+    public ResponseEntity<Page<EmployeeDto>> getEmployees(
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String position,
+            @RequestParam(required = false) LocalDate hiredAfter,
+            @RequestParam(required = false) LocalDate hiredBefore,
+            Pageable pageable){
+
+        return ResponseEntity.ok(service.getEmployees(firstName,position, hiredAfter, hiredBefore, pageable));
     }
 }

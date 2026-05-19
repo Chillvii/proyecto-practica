@@ -1,9 +1,12 @@
 package com.example.proyectopractica.employees;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.example.proyectopractica.common.EmployeeNotFoundException;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -56,5 +59,19 @@ public class EmployeeService {
         Employee employee = repository.findById(id)
                 .orElseThrow(()-> new EmployeeNotFoundException(id));
         repository.delete(employee);
+    }
+
+    public Page<EmployeeDto> getEmployees(String firstName,
+                                          String position,
+                                          LocalDate hiredBefore,
+                                          LocalDate hiredAfter,
+                                          Pageable pageable){
+        return repository.search(
+                firstName,
+                position,
+                hiredBefore,
+                hiredAfter,
+                pageable)
+                .map(EmployeeMapper::toDto);
     }
 }
