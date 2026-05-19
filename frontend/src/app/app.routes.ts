@@ -6,6 +6,7 @@ import { EmployeeAddComponent } from './features/employees/pages/employee-add/em
 
 export const routes: Routes = [
   { path: '', component: EmployeeListComponent },
+  { path: 'employees/filter', component: EmployeeListComponent },
   { path: 'employees/new', component: EmployeeAddComponent},
   { path: 'employees/:id', component: EmployeeDetailComponent},
   { path: '**', redirectTo: '' },

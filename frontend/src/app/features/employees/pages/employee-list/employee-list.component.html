@@ -34,7 +34,16 @@
     </div>
     }
   </header>
+  <!--Filtros-->
+  <div class="employee-list__filters">
+    <input [formControl]="firstNameControl" placeholder="Buscar por nombre..." />
+    <input [formControl]="lastNameControl" placeholder="Buscar por apellido..."/>
 
+    <input type="text" placeholder="Puesto..." (input)="onPositionChange($any($event.target).value)" />
+
+    from: <input type="date" [value]="fromFilter()" (change)="fromFilter.set($any($event.target).value); onDateChange()" />
+    to: <input type="date" [value]="toFilter()"(change)="toFilter.set($any($event.target).value); onDateChange()"/>
+  </div>
   @if (loading()) {
   <p class="employee-list__status">Cargando empleados…</p>
   } @else if (error()) {
@@ -52,7 +61,7 @@
           <th>Puesto</th>
           <th>Fecha de alta</th>
           <th>
-            <button [routerLink]="['/employees/new']" class="employee-list__button"> + </button>
+            <button type="button" [routerLink]="['/employees/new']" class="employee-list__button"> + </button>
           </th>
         </tr>
       </thead>
@@ -66,7 +75,8 @@
           <td><input formControlName="position"></td>
           <td>{{ employee.hiredAt }}</td>
           <td>
-            <button type="button" (click)="save(employee.id)" [disabled]="saving()" class="employee-list__button">✓</button>
+            <button type="button" (click)="save(employee.id)" [disabled]="saving()"
+              class="employee-list__button">✓</button>
             <button type="button" (click)="cancelEdit()" [disabled]="saving()" class="employee-list__button">X</button>
           </td>
           } @else {
@@ -76,13 +86,13 @@
           <td>{{ employee.position }}</td>
           <td>{{ employee.hiredAt }}</td>
           <td>
-            <button (click)="edit(employee)" class="employee-list__button--edit">
+            <button type="button" (click)="edit(employee)" class="employee-list__button--edit">
               <img src="assets/edit.svg" alt="Editar" class="employee-list__icono">
             </button>
-            <button [routerLink]="['/employees', employee.id]" class="employee-list__button">
+            <button type="button" [routerLink]="['/employees', employee.id]" class="employee-list__button">
               <img src="assets/lupa.svg" alt="Ver" class="employee-list__icono">
             </button>
-            <button (click)="delete(employee.id)" class="employee-list__button--delete">
+            <button type="button" (click)="delete(employee.id)" class="employee-list__button--delete">
               <img src="assets/delete.svg" alt="Ver" class="employee-list__icono">
             </button>
           </td>
@@ -93,6 +103,11 @@
     </table>
   </form>
   }
+  <div class="employee-list__paginator">
+    <button (click)="prevPage()" [disabled]="currentPage() === 0">← Anterior</button>
+    <span>{{ currentPage() + 1 }} / {{ totalPages() }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage() === totalPages() - 1">Siguiente →</button>
+  </div>
   @if (showDeleteModal) {
   <div class="modal-backdrop">
     <div class="modal">
@@ -103,5 +118,5 @@
       </div>
     </div>
   </div>
-}
+  }
 </section>
