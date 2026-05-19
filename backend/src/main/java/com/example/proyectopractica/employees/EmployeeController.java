@@ -56,7 +56,7 @@ public class EmployeeController {
 
     //filtros
     @GetMapping
-    public ResponseEntity<Page<EmployeeDto>> getEmployees(
+    public ResponseEntity<PageResponse> getEmployees(
             @RequestParam(required = false) String firstName,
             @RequestParam(required = false) String position,
             @RequestParam(required = false) LocalDate hiredAfter,

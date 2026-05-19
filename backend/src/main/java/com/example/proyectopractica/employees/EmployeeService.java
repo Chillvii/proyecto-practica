@@ -61,17 +61,22 @@ public class EmployeeService {
         repository.delete(employee);
     }
 
-    public Page<EmployeeDto> getEmployees(String firstName,
+    public PageResponse getEmployees(String firstName,
                                           String position,
                                           LocalDate hiredBefore,
                                           LocalDate hiredAfter,
                                           Pageable pageable){
-        return repository.search(
-                firstName,
-                position,
-                hiredBefore,
-                hiredAfter,
-                pageable)
-                .map(EmployeeMapper::toDto);
+        Page<Employee> page = repository.search(
+                        firstName,
+                        position,
+                        hiredBefore,
+                        hiredAfter,
+                        pageable);
+
+        List<EmployeeDto> content = page.getContent()
+                .stream().map(EmployeeMapper::toDto)
+                .toList();
+
+        return new PageResponse(content, page.getNumber(), page.getSize(),page.getTotalElements(),page.getTotalPages());
     }
 }
