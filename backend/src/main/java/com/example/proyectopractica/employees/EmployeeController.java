@@ -27,10 +27,10 @@ public class EmployeeController {
 
     private final EmployeeService service;
 
-    @GetMapping
-    public List<EmployeeDto> list() {
-        return service.findAll();
-    }
+//    @GetMapping
+//    public List<EmployeeDto> list() {
+//        return service.findAll();
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable String id){
@@ -54,7 +54,7 @@ public class EmployeeController {
         return ResponseEntity.noContent().build();
     }
 
-    //filtros por nombre y posicion
+    //filtros
     @GetMapping
     public ResponseEntity<Page<EmployeeDto>> getEmployees(
             @RequestParam(required = false) String firstName,
