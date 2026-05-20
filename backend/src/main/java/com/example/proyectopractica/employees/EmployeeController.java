@@ -7,6 +7,7 @@ import java.util.List;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,10 +28,10 @@ public class EmployeeController {
 
     private final EmployeeService service;
 
-//    @GetMapping
-//    public List<EmployeeDto> list() {
-//        return service.findAll();
-//    }
+    @GetMapping
+    public List<EmployeeDto> list() {
+        return service.findAll();
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable String id){
@@ -55,14 +56,15 @@ public class EmployeeController {
     }
 
     //filtros
-    @GetMapping
+    @GetMapping("/filter")
     public ResponseEntity<PageResponse> getEmployees(
             @RequestParam(required = false) String firstName,
+            //@RequestParam(required = false) String lastName,
             @RequestParam(required = false) String position,
-            @RequestParam(required = false) LocalDate hiredAfter,
-            @RequestParam(required = false) LocalDate hiredBefore,
-            Pageable pageable){
+            @RequestParam(required = false) LocalDate from,
+            @RequestParam(required = false) LocalDate to,
+            @PageableDefault(size = 5,page = 0) Pageable pageable){
 
-        return ResponseEntity.ok(service.getEmployees(firstName,position, hiredAfter, hiredBefore, pageable));
+        return ResponseEntity.ok(service.getEmployees(firstName, position, from, to, pageable));
     }
 }

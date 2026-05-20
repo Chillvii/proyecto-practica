@@ -6,7 +6,12 @@ import java.util.List;
 import com.example.proyectopractica.common.EmployeeNotFoundException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -16,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class EmployeeService {
 
     private final EmployeeRepository repository;
+    private final MongoTemplate mongoTemplate;
 
     public List<EmployeeDto> findAll() {
         return repository.findAll()
@@ -62,21 +68,32 @@ public class EmployeeService {
     }
 
     public PageResponse getEmployees(String firstName,
-                                          String position,
-                                          LocalDate hiredBefore,
-                                          LocalDate hiredAfter,
-                                          Pageable pageable){
-        Page<Employee> page = repository.search(
-                        firstName,
-                        position,
-                        hiredBefore,
-                        hiredAfter,
-                        pageable);
+                                     String position, LocalDate from,
+                                     LocalDate to, Pageable pageable) {
+        Page<Employee> page;
 
-        List<EmployeeDto> content = page.getContent()
-                .stream().map(EmployeeMapper::toDto)
-                .toList();
+        boolean hasFirstName = firstName != null && !firstName.isBlank();
+        boolean hasPosition  = position != null && !position.isBlank();
+        boolean hasRange     = from != null && to != null;
 
-        return new PageResponse(content, page.getNumber(), page.getSize(),page.getTotalElements(),page.getTotalPages());
+        if (hasFirstName && hasPosition && hasRange)
+            page = repository.findByFirstNameAndPositionAndHiredAtRange(firstName, position, from, to, pageable);
+        else if (hasFirstName && hasPosition)
+            page = repository.findByFirstNameIgnoreCaseAndPositionIgnoreCase(firstName, position, pageable);
+        else if (hasFirstName && hasRange)
+            page = repository.findByFirstNameAndHiredAtRange(firstName, from, to, pageable);
+        else if (hasPosition && hasRange)
+            page = repository.findByPositionAndHiredAtRange(position, from, to, pageable);
+        else if (hasFirstName)
+            page = repository.findByFirstNameIgnoreCase(firstName, pageable);
+        else if (hasPosition)
+            page = repository.findByPositionIgnoreCase(position, pageable);
+        else if (hasRange)
+            page = repository.findByHiredAtRange(from, to, pageable);
+        else
+            page = repository.findAll(pageable);
+
+        return new PageResponse(page.getContent(), page.getNumber(), page.getSize(),
+                page.getTotalElements(), page.getTotalPages());
     }
 }
