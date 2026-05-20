@@ -53,6 +53,12 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.INTERNAL_SERVER_ERROR, "Error interno del servidor", request, null);
     }
 
+    @ExceptionHandler(EmployeeNotFoundException.class)
+    public  ResponseEntity<ApiError> handleEmployeeNotFound(EmployeeNotFoundException ex, HttpServletRequest request) {
+        return build(HttpStatus.NOT_FOUND,"Empleado con id "+ ex.getMessage() + " no encontrado", request,
+                null);
+    }
+
     private ResponseEntity<ApiError> build(HttpStatus status, String message, HttpServletRequest request,
                                            Map<String, String> fieldErrors) {
         ApiError body = ApiError.builder()

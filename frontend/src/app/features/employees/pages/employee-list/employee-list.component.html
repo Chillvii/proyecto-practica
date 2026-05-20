@@ -4,15 +4,54 @@
     <p class="employee-list__hint">
       Listado simple. Tu siguiente reto: añade detalle, alta, edición y borrado.
     </p>
+    @if (editingId && (employeeForm.invalid || errorMessage !== null)) {
+    <div class="employee-list__errors-box">
+      <strong>Corrige los siguientes errores:</strong>
+      <ul>
+        <!-- Nombre -->
+        @if (employeeForm.get('firstName')?.errors?.['required']) {
+        <li>El nombre es obligatorio</li>
+        }
+        <!-- Apellido -->
+        @if (employeeForm.get('lastName')?.errors?.['required']) {
+        <li>El apellido es obligatorio</li>
+        }
+        <!-- Email -->
+        @if (employeeForm.get('email')?.errors?.['required']) {
+        <li>El email es obligatorio</li>
+        } @else if (employeeForm.get('email')?.errors?.['email']) {
+        <li>Formato de email inválido</li>
+        }
+        <!-- Puesto -->
+        @if (employeeForm.get('position')?.errors?.['required']) {
+        <li>El puesto es obligatorio</li>
+        }
+        <!-- Error backend -->
+        @if (submitted && errorMessage !== null) {
+        <li>{{ errorMessage }}</li>
+        }
+      </ul>
+    </div>
+    }
   </header>
+  <!--Filtros-->
+  <div class="employee-list__filters">
+    <input [formControl]="firstNameControl" placeholder="Buscar por nombre..." />
+    <input [formControl]="positionControl" placeholder="Buscar por puesto..." />
 
+    desde: <input type="date" [value]="fromFilter()"
+  (change)="fromFilter.set($any($event.target).value); onDateChange()" />
+    hasta: <input type="date" [value]="toFilter()"
+  (change)="toFilter.set($any($event.target).value); onDateChange()" />
+  </div>
   @if (loading()) {
-    <p class="employee-list__status">Cargando empleados…</p>
+  <p class="employee-list__status">Cargando empleados…</p>
   } @else if (error()) {
-    <p class="employee-list__status employee-list__status--error">{{ error() }}</p>
+  <p class="employee-list__status employee-list__status--error">{{ error() }}</p>
   } @else if (employees().length === 0) {
-    <p class="employee-list__status">No hay empleados en la base de datos.</p>
+  <p class="employee-list__status">No hay empleados en la base de datos.</p>
   } @else {
+  <form [formGroup]="employeeForm">
     <table class="employee-list__table">
       <thead>
         <tr>
@@ -21,19 +60,63 @@
           <th>Email</th>
           <th>Puesto</th>
           <th>Fecha de alta</th>
+          <th>
+            <button type="button" [routerLink]="['/employees/new']" class="employee-list__button"> + </button>
+          </th>
         </tr>
       </thead>
       <tbody>
         @for (employee of employees(); track employee.id) {
-          <tr>
-            <td>{{ employee.firstName }}</td>
-            <td>{{ employee.lastName }}</td>
-            <td>{{ employee.email }}</td>
-            <td>{{ employee.position }}</td>
-            <td>{{ employee.hiredAt }}</td>
-          </tr>
+        <tr>
+          @if (editingId == employee.id) {
+          <td><input formControlName="firstName"></td>
+          <td><input formControlName="lastName"></td>
+          <td><input formControlName="email"></td>
+          <td><input formControlName="position"></td>
+          <td>{{ employee.hiredAt | date:'MM/dd/yyyy' }}</td>
+          <td>
+            <button type="button" (click)="save(employee.id)" [disabled]="saving()"
+              class="employee-list__button">✓</button>
+            <button type="button" (click)="cancelEdit()" [disabled]="saving()" class="employee-list__button">X</button>
+          </td>
+          } @else {
+          <td>{{ employee.firstName }}</td>
+          <td>{{ employee.lastName }}</td>
+          <td>{{ employee.email }}</td>
+          <td>{{ employee.position }}</td>
+          <td>{{ employee.hiredAt  | date:'MM/dd/yyyy' }}</td>
+          <td>
+            <button type="button" (click)="edit(employee)" class="employee-list__button--edit">
+              <img src="assets/edit.svg" alt="Editar" class="employee-list__icono">
+            </button>
+            <button type="button" [routerLink]="['/employees', employee.id]" class="employee-list__button">
+              <img src="assets/lupa.svg" alt="Ver" class="employee-list__icono">
+            </button>
+            <button type="button" (click)="delete(employee.id)" class="employee-list__button--delete">
+              <img src="assets/delete.svg" alt="Ver" class="employee-list__icono">
+            </button>
+          </td>
+          }
+        </tr>
         }
       </tbody>
     </table>
+  </form>
+  }
+  <div class="employee-list__paginator">
+    <button (click)="prevPage()" [disabled]="currentPage() === 0">← Anterior</button>
+    <span>{{ currentPage() + 1 }} / {{ totalPages() }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage() === totalPages() - 1">Siguiente →</button>
+  </div>
+  @if (showDeleteModal) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <h3>¿Seguro que quieres borrar este empleado?</h3>
+      <div class="modal__actions">
+        <button (click)="confirmDelete()">Eliminar</button>
+        <button (click)="showDeleteModal = false">Cancelar</button>
+      </div>
+    </div>
+  </div>
   }
 </section>
