@@ -1,5 +1,6 @@
 package com.example.proyectopractica.employees;
 
+import com.example.proyectopractica.departments.DepartmentDto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -25,6 +26,6 @@ public record EmployeeDto(
         @NotBlank(message = "El puesto no puede estar vacio")
         String position,
         LocalDate hiredAt,
-        String departmentName
+        DepartmentDto department
 ) {
 }

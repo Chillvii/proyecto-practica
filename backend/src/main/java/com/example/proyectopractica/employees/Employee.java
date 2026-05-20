@@ -2,6 +2,7 @@ package com.example.proyectopractica.employees;
 
 import java.time.LocalDate;
 
+import com.example.proyectopractica.departments.Department;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -38,5 +39,5 @@ public class Employee {
 
     private LocalDate hiredAt;
 
-    private String departmentName;
+    private Department department;
 }

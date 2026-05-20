@@ -15,8 +15,6 @@ public class DepartmentService {
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository repository;
 
-    private final DepartmentMapper mapper;
-
     public List<DepartmentDto> getAll() {
         return repository.findAll().stream()
                 .map(DepartmentMapper::toDto)

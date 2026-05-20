@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.example.proyectopractica.common.DepartmentNotFoundException;
 import com.example.proyectopractica.common.EmployeeNotFoundException;
+import com.example.proyectopractica.departments.Department;
 import com.example.proyectopractica.departments.DepartmentRepository;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
@@ -39,8 +40,11 @@ public class EmployeeService {
         if (repository.existsByEmail(request.email()))
             throw new DuplicateKeyException(request.email());
 
-        if (request.departmentName() != null && !departmentRepository.existsByName(request.departmentName()))
-            throw new DepartmentNotFoundException(request.departmentName());
+        Department department = null;
+        if (request.department() != null && request.department().name() != null) {
+            department = departmentRepository.findByName(request.department().name())
+                    .orElseThrow(() -> new DepartmentNotFoundException(request.department().name()));
+        }
 
         Employee employee = EmployeeMapper.toEntity(request);
         employee.setHiredAt(LocalDate.now());
