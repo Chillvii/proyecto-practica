@@ -54,9 +54,20 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(EmployeeNotFoundException.class)
-    public  ResponseEntity<ApiError> handleEmployeeNotFound(EmployeeNotFoundException ex, HttpServletRequest request) {
+    public ResponseEntity<ApiError> handleEmployeeNotFound(EmployeeNotFoundException ex, HttpServletRequest request) {
         return build(HttpStatus.NOT_FOUND,"Empleado con id "+ ex.getMessage() + " no encontrado", request,
                 null);
+    }
+
+    @ExceptionHandler(DepartmentNotFoundException.class)
+    public ResponseEntity<ApiError> handleDepartmentNotFound(DepartmentNotFoundException ex, HttpServletRequest request) {
+        return build(HttpStatus.NOT_FOUND,"Empleado con id "+ ex.getMessage() + " no encontrado", request,
+                null);
+    }
+
+    @ExceptionHandler(ResourceInUseException.class)
+    public ResponseEntity<ApiError> handleResourceInUse(ResourceInUseException ex, HttpServletRequest request){
+        return build(HttpStatus.CONFLICT, ex.getMessage(), request, null);
     }
 
     private ResponseEntity<ApiError> build(HttpStatus status, String message, HttpServletRequest request,

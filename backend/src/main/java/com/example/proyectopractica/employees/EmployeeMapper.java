@@ -22,7 +22,8 @@ public final class EmployeeMapper {
                 entity.getLastName(),
                 entity.getEmail(),
                 entity.getPosition(),
-                entity.getHiredAt()
+                entity.getHiredAt(),
+                entity.getDepartmentName()
         );
     }
 
@@ -37,6 +38,7 @@ public final class EmployeeMapper {
                 .email(dto.email())
                 .position(dto.position())
                 .hiredAt(dto.hiredAt())
+                .departmentName(dto.departmentName())
                 .build();
     }
 }

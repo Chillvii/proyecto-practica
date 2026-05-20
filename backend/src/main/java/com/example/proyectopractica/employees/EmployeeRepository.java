@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.mongodb.repository.Update;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -35,4 +36,11 @@ public interface EmployeeRepository extends MongoRepository<Employee, String> {
     @Query("{ 'firstName': { $regex: ?0, $options: 'i' }, 'position': { $regex: ?1, $options: 'i' }, 'hiredAt': { $gte: ?2, $lte: ?3 } }")
     Page<Employee> findByFirstNameAndPositionAndHiredAtRange(
             String firstName, String position, LocalDate from, LocalDate to, Pageable pageable);
+
+
+    boolean existsByDepartmentName(String name);
+
+    @Query("{ 'departmentName': ?0 }")
+    @Update("{ '$set': { 'departmentName': ?1 } }")
+    void updateDepartmentName(String oldName, String newName);
 }

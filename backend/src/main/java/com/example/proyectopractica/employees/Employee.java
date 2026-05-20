@@ -37,4 +37,6 @@ public class Employee {
     private String position;
 
     private LocalDate hiredAt;
+
+    private String departmentName;
 }

@@ -24,6 +24,7 @@ public record EmployeeDto(
         String email,
         @NotBlank(message = "El puesto no puede estar vacio")
         String position,
-        LocalDate hiredAt
+        LocalDate hiredAt,
+        String departmentName
 ) {
 }

@@ -3,19 +3,24 @@ package com.example.proyectopractica.employees;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.example.proyectopractica.common.DepartmentNotFoundException;
 import com.example.proyectopractica.common.EmployeeNotFoundException;
+import com.example.proyectopractica.departments.DepartmentRepository;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
 public class EmployeeService {
 
     private final EmployeeRepository repository;
+    private final DepartmentRepository departmentRepository;
 
     public List<EmployeeDto> findAll() {
         return repository.findAll()
@@ -30,27 +35,35 @@ public class EmployeeService {
         return EmployeeMapper.toDto(employee);
     }
 
-    public EmployeeDto addEmployee(EmployeeDto request){
-        if (repository.existsByEmail(request.email())){
+    public EmployeeDto addEmployee(EmployeeDto request) {
+        if (repository.existsByEmail(request.email()))
             throw new DuplicateKeyException(request.email());
-        }
-        return EmployeeMapper.toDto(repository.save(EmployeeMapper.toEntity(request)));
+
+        if (request.departmentName() != null && !departmentRepository.existsByName(request.departmentName()))
+            throw new DepartmentNotFoundException(request.departmentName());
+
+        Employee employee = EmployeeMapper.toEntity(request);
+        employee.setHiredAt(LocalDate.now());
+
+        return EmployeeMapper.toDto(repository.save(employee));
     }
 
-    public EmployeeDto updateEmployee(String id,EmployeeDto request){
+    public EmployeeDto updateEmployee(String id, EmployeeDto request) {
         Employee employee = repository.findById(id)
-                .orElseThrow(()-> new EmployeeNotFoundException(id));
+                .orElseThrow(() -> new EmployeeNotFoundException(id));
 
         if (repository.existsByEmail(request.email())
-                && !employee.getEmail().equals(request.email())) {
+                && !employee.getEmail().equals(request.email()))
             throw new DuplicateKeyException(request.email());
-        }
+
+        if (request.departmentName() != null && !departmentRepository.existsByName(request.departmentName()))
+            throw new DepartmentNotFoundException(request.departmentName());
 
         employee.setFirstName(request.firstName());
         employee.setLastName(request.lastName());
         employee.setEmail(request.email());
         employee.setPosition(request.position());
-        //employee.setHiredAt(request.hiredAt());
+        employee.setDepartmentName(request.departmentName()); // ← añadir
 
         return EmployeeMapper.toDto(repository.save(employee));
     }
@@ -89,5 +102,12 @@ public class EmployeeService {
 
         return new PageResponse(page.getContent(), page.getNumber(), page.getSize(),
                 page.getTotalElements(), page.getTotalPages());
+    }
+
+    public void assignDepartment(EmployeeDto dto) {
+        if (!departmentRepository.existsByName(dto.departmentName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Departamento no existe");
+        }
+        // guardar empleado con departmentName
     }
 }
