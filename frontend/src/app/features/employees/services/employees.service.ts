@@ -39,7 +39,6 @@ export class EmployeesService {
   getFiltered(filters: EmployeeFilters, page: number, size: number): Observable<PageResponse> {
     const params: any = { page, size };
     if (filters.firstName) params['firstName'] = filters.firstName;
-    if (filters.lastName)  params['lastName']  = filters.lastName;
     if (filters.position)  params['position']  = filters.position;
     if (filters.from)      params['from']      = filters.from;
     if (filters.to)        params['to']        = filters.to;

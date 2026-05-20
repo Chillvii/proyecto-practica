@@ -37,13 +37,12 @@
   <!--Filtros-->
   <div class="employee-list__filters">
     <input [formControl]="firstNameControl" placeholder="Buscar por nombre..." />
-    <input [formControl]="lastNameControl" placeholder="Buscar por apellido..." />
+    <input [formControl]="positionControl" placeholder="Buscar por puesto..." />
 
-    <input type="text" placeholder="Puesto..." (input)="onPositionChange($any($event.target).value)" />
-
-    from: <input type="date" [value]="fromFilter()"
-      (change)="fromFilter.set($any($event.target).value); onDateChange()" />
-    to: <input type="date" [value]="toFilter()" (change)="toFilter.set($any($event.target).value); onDateChange()" />
+    desde: <input type="date" [value]="fromFilter()"
+  (change)="fromFilter.set($any($event.target).value); onDateChange()" />
+    hasta: <input type="date" [value]="toFilter()"
+  (change)="toFilter.set($any($event.target).value); onDateChange()" />
   </div>
   @if (loading()) {
   <p class="employee-list__status">Cargando empleados…</p>
@@ -74,7 +73,7 @@
           <td><input formControlName="lastName"></td>
           <td><input formControlName="email"></td>
           <td><input formControlName="position"></td>
-          <td>{{ employee.hiredAt }}</td>
+          <td>{{ employee.hiredAt | date:'MM/dd/yyyy' }}</td>
           <td>
             <button type="button" (click)="save(employee.id)" [disabled]="saving()"
               class="employee-list__button">✓</button>
@@ -85,7 +84,7 @@
           <td>{{ employee.lastName }}</td>
           <td>{{ employee.email }}</td>
           <td>{{ employee.position }}</td>
-          <td>{{ employee.hiredAt }}</td>
+          <td>{{ employee.hiredAt  | date:'MM/dd/yyyy' }}</td>
           <td>
             <button type="button" (click)="edit(employee)" class="employee-list__button--edit">
               <img src="assets/edit.svg" alt="Editar" class="employee-list__icono">

@@ -60,7 +60,7 @@
           <td><input formControlName="lastName"></td>
           <td><input formControlName="email"></td>
           <td><input formControlName="position"></td>
-          <td>{{ employee()?.hiredAt }}</td>
+          <td>{{ employee()?.hiredAt | date:'dd/MM/yyyy' }}</td>
           <td>
             <button type="button" (click)="save()" [disabled]="saving()" class="employee-detail__button">✓</button>
             <button type="button" (click)="cancelEdit()" [disabled]="saving()" class="employee-detail__button">X</button>
@@ -70,7 +70,7 @@
           <td>{{ employee()?.lastName }}</td>
           <td>{{ employee()?.email }}</td>
           <td>{{ employee()?.position }}</td>
-          <td>{{ employee()?.hiredAt }}</td>
+          <td>{{ employee()?.hiredAt | date:'dd/MM/yyyy' }}</td>
           <td>
             <button type="button" (click)="edit()" class="employee-detail__button--edit">
               <img src="assets/edit.svg" alt="editar" class="employee-detail__icono">

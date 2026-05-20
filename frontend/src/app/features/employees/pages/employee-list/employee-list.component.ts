@@ -1,16 +1,17 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal, computed, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal, computed } from '@angular/core';
 
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Employee, EmployeeAdd, PageResponse, EmployeeFilters } from '../../models/employee.model';
 import { EmployeesService } from '../../services/employees.service';
 import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, take } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-employee-list',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterModule, FormsModule, ReactiveFormsModule],
+  imports: [RouterModule, FormsModule, ReactiveFormsModule, DatePipe],
   templateUrl: './employee-list.component.html',
   styleUrl: './employee-list.component.scss',
 })
@@ -19,6 +20,8 @@ export class EmployeeListComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+
+  private dateDebounceTimer: any;
 
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -35,10 +38,9 @@ export class EmployeeListComponent implements OnInit {
 
   //filtros
   readonly firstNameControl = new FormControl('');   // para debounce
-  readonly lastNameControl = new FormControl('');
-  readonly positionFilter = signal('');
-  readonly fromFilter = signal('');
-  readonly toFilter = signal('');
+  readonly positionControl = new FormControl('');
+  readonly fromFilter = signal(''); // mm-dd-yyyy
+  readonly toFilter = signal(''); // yyyy-MM-dd
   readonly currentPage = signal(0);
   readonly pageSize = 5;
 
@@ -58,8 +60,7 @@ export class EmployeeListComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.pipe(take(1)).subscribe(params => {
       if (params['firstName']) this.firstNameControl.setValue(params['firstName']);
-      if (params['lastName']) this.lastNameControl.setValue(params['lastName']);
-      if (params['position']) this.positionFilter.set(params['position']);
+      if (params['position']) this.positionControl.setValue(params['position']);
       if (params['from']) this.fromFilter.set(params['from']);
       if (params['to']) this.toFilter.set(params['to']);
       if (params['page']) this.currentPage.set(+params['page']);
@@ -73,7 +74,7 @@ export class EmployeeListComponent implements OnInit {
       this.currentPage.set(0);
       this.loadEmployees();
     });
-    this.lastNameControl.valueChanges.pipe(
+    this.positionControl.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
     ).subscribe(() => {
@@ -85,11 +86,15 @@ export class EmployeeListComponent implements OnInit {
   loadEmployees(): void {
     const filters: EmployeeFilters = {
       firstName: this.firstNameControl.value?.trim() || undefined,
-      lastName: this.lastNameControl.value?.trim() || undefined,
-      position: this.positionFilter() || undefined,
+      position: this.positionControl.value?.trim() || undefined,
       from: this.fromFilter() || undefined,
       to: this.toFilter() || undefined,
     };
+
+    console.log(this.firstNameControl.value);
+    console.log(this.positionControl.value);
+    console.log('FROM:', this.fromFilter());
+    console.log('TO:', this.toFilter());
 
     this.service.getFiltered(filters, this.currentPage(), this.pageSize).subscribe({
       next: (data) => {
@@ -104,15 +109,23 @@ export class EmployeeListComponent implements OnInit {
     });
   }
 
-  onPositionChange(value: string): void {
-    this.positionFilter.set(value);
-    this.currentPage.set(0);
-    this.loadEmployees();
-  }
+  /*   onPositionChange(value: string): void {
+      this.positionFilter.set(value);
+      this.currentPage.set(0);
+      this.loadEmployees();
+    } */
 
   onDateChange(): void {
-    this.currentPage.set(0);
-    this.loadEmployees();
+    clearTimeout(this.dateDebounceTimer);
+    this.dateDebounceTimer = setTimeout(() => {
+      const from = this.fromFilter();
+      const to = this.toFilter();
+
+      if ((from && from.length < 10) || (to && to.length < 10)) return;
+
+      this.currentPage.set(0);
+      this.loadEmployees();
+    }, 500);
   }
 
   prevPage(): void {
@@ -187,8 +200,7 @@ export class EmployeeListComponent implements OnInit {
     this.router.navigate([], {
       queryParams: {
         firstName: this.firstNameControl.value || null,
-        lastName: this.lastNameControl.value || null,
-        position: this.positionFilter() || null,
+        position: this.positionControl.value || null,
         from: this.fromFilter() || null,
         to: this.toFilter() || null,
         page: this.currentPage(),
