@@ -22,6 +22,7 @@ export class EmployeeListComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly deptService = inject(DepartmentsService);
 
   private dateDebounceTimer: any;
 
@@ -51,7 +52,6 @@ export class EmployeeListComponent implements OnInit {
   readonly totalPages = computed(() => this.pageResponse()?.totalPages ?? 0);
   readonly totalElements = computed(() => this.pageResponse()?.totalElements ?? 0);
 
-  private readonly deptService = inject(DepartmentsService);
   departments: Department[] = [];
 
   readonly employeeForm = this.fb.group({

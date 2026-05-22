@@ -1,6 +1,6 @@
 <section class="employee-add">
     <header class="employee-add">
-        <button [routerLink]="['']" class="employee-add__botonReturn"> ← </button>
+        <button [routerLink]="['']" class="employee-add__button--return"> ← </button>
         <h2>Formulario empleado</h2>
     </header>
     <form [formGroup]="employeeForm" class="__formulario">
@@ -49,7 +49,11 @@
             <label for="employee-postion">Puesto: </label>
             <input type="text" id="employee-postion" formControlName="position"><br />
 
-            <label for="employee-dept">Departamento:</label>
+            <div class="employee-add__dept-row">
+                <button type="button" [routerLink]="['/departments']"
+                    class="employee-add__button--config_dep">⚙</button>
+                <label for="employee-dept">Departamento:</label>
+            </div>
             <select id="employee-dept" formControlName="departmentName">
                 <option [value]="null">
                     {{ departments.length === 0 ? 'Cargando...' : '-- Sin departamento --' }}
@@ -64,7 +68,7 @@
                 {{ errorMessage }}
             </p>
             }
-            <button type="button" (click)="create()" class="employee-add__botonAdd">
+            <button type="button" (click)="create()" class="employee-add__button--add">
                 Crear empleado
             </button>
 
