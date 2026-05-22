@@ -40,15 +40,13 @@ public class EmployeeService {
         if (repository.existsByEmail(request.email()))
             throw new DuplicateKeyException(request.email());
 
-        Department department = null;
-        if (request.department() != null && request.department().name() != null) {
-            department = departmentRepository.findByName(request.department().name())
-                    .orElseThrow(() -> new DepartmentNotFoundException(request.department().name()));
+        if (request.departmentName() != null && !request.departmentName().isBlank()) {
+            departmentRepository.findByName(request.departmentName())
+                    .orElseThrow(() -> new DepartmentNotFoundException(request.departmentName()));
         }
 
         Employee employee = EmployeeMapper.toEntity(request);
         employee.setHiredAt(LocalDate.now());
-
         return EmployeeMapper.toDto(repository.save(employee));
     }
 
@@ -106,12 +104,5 @@ public class EmployeeService {
 
         return new PageResponse(page.getContent(), page.getNumber(), page.getSize(),
                 page.getTotalElements(), page.getTotalPages());
-    }
-
-    public void assignDepartment(EmployeeDto dto) {
-        if (!departmentRepository.existsByName(dto.departmentName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Departamento no existe");
-        }
-        // guardar empleado con departmentName
     }
 }
