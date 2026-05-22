@@ -105,4 +105,11 @@ public class EmployeeService {
         return new PageResponse(page.getContent(), page.getNumber(), page.getSize(),
                 page.getTotalElements(), page.getTotalPages());
     }
+
+    public List<EmployeeDto> findByDepartment(String name) {
+        return repository.findByDepartmentName(name)
+                .stream()
+                .map(EmployeeMapper::toDto)
+                .toList();
+    }
 }

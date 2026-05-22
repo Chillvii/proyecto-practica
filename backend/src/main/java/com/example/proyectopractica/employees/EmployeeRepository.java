@@ -37,7 +37,7 @@ public interface EmployeeRepository extends MongoRepository<Employee, String> {
     Page<Employee> findByFirstNameAndPositionAndHiredAtRange(
             String firstName, String position, LocalDate from, LocalDate to, Pageable pageable);
 
-
+    List<Employee> findByDepartmentName(String departmentName);
     boolean existsByDepartmentName(String name);
 
     @Query("{ 'departmentName': ?0 }")

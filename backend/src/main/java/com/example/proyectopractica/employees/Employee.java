@@ -41,7 +41,7 @@ public class Employee {
 
     // Relación embed: guardamos el nombre del departamento directamente en el empleado.
     // Motivo: evita joins, simplifica las queries y es suficiente para esta aplicacion.
-    // Contras: si se renombra un departamento hay que propagar el cambio
+    // Contras: si se renombra un departamento hay que propagar el cambio.
     // (ver DepartmentService.update → employeeRepository.updateDepartmentName).
     private String departmentName;
 }

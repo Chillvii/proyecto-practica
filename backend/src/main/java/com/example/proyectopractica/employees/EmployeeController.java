@@ -36,6 +36,12 @@ public class EmployeeController {
         return ResponseEntity.ok(service.findById(id));
     }
 
+    // EmployeeController
+    @GetMapping("/by-department/{name}")
+    public ResponseEntity<List<EmployeeDto>> getByDepartment(@PathVariable String name) {
+        return ResponseEntity.ok(service.findByDepartment(name));
+    }
+
     @PostMapping("/new")
     public ResponseEntity<EmployeeDto> addEmployee(@Valid @RequestBody EmployeeDto request){
         EmployeeDto dto = service.addEmployee(request);
