@@ -50,6 +50,7 @@
           <th>Email</th>
           <th>Puesto</th>
           <th>Fecha de alta</th>
+          <th>Departamento</th>
           <th></th>
         </tr>
       </thead>
@@ -62,6 +63,14 @@
           <td><input formControlName="position"></td>
           <td>{{ employee()?.hiredAt | date:'dd/MM/yyyy' }}</td>
           <td>
+            <select formControlName="departmentName">
+              <option [value]="null">-- Sin departamento --</option>
+              @for (dept of departments; track dept.id) {
+                <option [value]="dept.name">{{ dept.name }}</option>
+              }
+            </select>
+          </td>
+          <td>
             <button type="button" (click)="save()" [disabled]="saving()" class="employee-detail__button">✓</button>
             <button type="button" (click)="cancelEdit()" [disabled]="saving()" class="employee-detail__button">X</button>
           </td>
@@ -70,7 +79,8 @@
           <td>{{ employee()?.lastName }}</td>
           <td>{{ employee()?.email }}</td>
           <td>{{ employee()?.position }}</td>
-          <td>{{ employee()?.hiredAt | date:'dd/MM/yyyy' }}</td>
+          <td>{{ employee()?.hiredAt | date:'MM/dd/yyyy' }}</td>
+          <td>{{ employee()?.departmentName ?? '—' }}</td>
           <td>
             <button type="button" (click)="edit()" class="employee-detail__button--edit">
               <img src="assets/edit.svg" alt="editar" class="employee-detail__icono">

@@ -1,9 +1,11 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, OnInit, ChangeDetectorRef } from "@angular/core";
 import { ReactiveFormsModule, Validators, FormBuilder } from "@angular/forms";
 
 import { Employee, EmployeeAdd } from '../../models/employee.model';
 import { EmployeesService } from '../../services/employees.service';
 import { Router, RouterModule } from "@angular/router";
+import { Department } from '../../../../shared/models/department.model';
+import { DepartmentsService } from "../../../departments/services/departments.service";
 @Component({
     selector: 'app-employee-add',
     standalone: true,
@@ -11,12 +13,22 @@ import { Router, RouterModule } from "@angular/router";
     templateUrl: './employee-add.component.html',
     styleUrl: './employee-add.component.scss',
 })
-export class EmployeeAddComponent {
+export class EmployeeAddComponent implements OnInit {
     private fb = inject(FormBuilder);
-    private service = inject(EmployeesService)
-
+    private service = inject(EmployeesService);
+    private deptService = inject(DepartmentsService);
     private router = inject(Router);
+    private cdr = inject(ChangeDetectorRef); //Carga los departamentos nada mas llegan
+
     errorMessage: string | null = null;
+    departments: Department[] = [];
+
+    ngOnInit() {
+        this.deptService.getAll().subscribe(d => {
+            this.departments = d;
+            this.cdr.markForCheck();
+        });
+    }
 
     getTodayDate(): string {
         return new Date().toISOString().substring(0, 10);
@@ -27,7 +39,7 @@ export class EmployeeAddComponent {
         lastName: ['', Validators.required],
         email: ['', [Validators.required, Validators.email]],
         position: ['', Validators.required],
-        hiredAt: [this.getTodayDate()]
+        departmentName: [null as string | null],
     });
 
     create() {

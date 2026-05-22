@@ -5,6 +5,8 @@ import { Employee, EmployeeAdd } from '../../models/employee.model';
 import { EmployeesService } from '../../services/employees.service';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { DepartmentsService } from "../../../departments/services/departments.service";
+import { Department } from '../../../../shared/models/department.model';
 
 @Component({
   selector: 'app-employee-detail',
@@ -27,6 +29,9 @@ export class EmployeeDetailComponent implements OnInit{
   readonly error = signal<string | null>(null);
   readonly notFound = signal<boolean>(false);
 
+  private deptService = inject(DepartmentsService);
+  departments: Department[] = [];
+
   //modificar
   isEditing = false;
   private fb = inject(FormBuilder);
@@ -46,7 +51,8 @@ export class EmployeeDetailComponent implements OnInit{
     lastName: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     position: ['', Validators.required],
-    hiredAt: [this.getTodayDate()]
+    hiredAt: [this.getTodayDate()],
+    departmentName: [null as string | null],
   });
 
   loadEmployee() {
@@ -73,6 +79,7 @@ export class EmployeeDetailComponent implements OnInit{
 
   ngOnInit(): void {
     this.loadEmployee();
+    this.deptService.getAll().subscribe(d => this.departments = d);
   }
 
   edit() {

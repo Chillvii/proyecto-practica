@@ -6,6 +6,8 @@ import { EmployeesService } from '../../services/employees.service';
 import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, take } from 'rxjs';
 import { DatePipe } from '@angular/common';
+import { DepartmentsService } from '../../../departments/services/departments.service';
+import { Department } from '../../../../shared/models/department.model';
 
 @Component({
   selector: 'app-employee-list',
@@ -49,12 +51,16 @@ export class EmployeeListComponent implements OnInit {
   readonly totalPages = computed(() => this.pageResponse()?.totalPages ?? 0);
   readonly totalElements = computed(() => this.pageResponse()?.totalElements ?? 0);
 
+  private readonly deptService = inject(DepartmentsService);
+  departments: Department[] = [];
+
   readonly employeeForm = this.fb.group({
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     position: ['', Validators.required],
     hiredAt: [new Date().toISOString().substring(0, 10)],
+    departmentName: [null as string | null], 
   });
 
   ngOnInit(): void {
@@ -65,6 +71,7 @@ export class EmployeeListComponent implements OnInit {
       if (params['to']) this.toFilter.set(params['to']);
       if (params['page']) this.currentPage.set(+params['page']);
       this.loadEmployees();
+      this.deptService.getAll().subscribe(d => this.departments = d);
     });
     // Debounce en el input de nombre
     this.firstNameControl.valueChanges.pipe(

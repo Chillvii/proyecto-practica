@@ -11,6 +11,7 @@ export interface Employee {
   email: string;
   position: string;
   hiredAt: string;
+  departmentName?: string;
 }
 
 export interface EmployeeAdd {
@@ -18,13 +19,12 @@ export interface EmployeeAdd {
   lastName: string;
   email: string;
   position: string;
-  hiredAt: string;
+  departmentName?: string;
 }
 
 //dtos filtros:
 export interface EmployeeFilters {
   firstName?: string;
-  lastName?: string;
   position?: string;
   from?: string;
   to?: string;

@@ -60,6 +60,7 @@
           <th>Email</th>
           <th>Puesto</th>
           <th>Fecha de alta</th>
+          <th>Departamento</th>
           <th>
             <button type="button" [routerLink]="['/employees/new']" class="employee-list__button"> + </button>
           </th>
@@ -75,6 +76,14 @@
           <td><input formControlName="position"></td>
           <td>{{ employee.hiredAt | date:'MM/dd/yyyy' }}</td>
           <td>
+            <select formControlName="departmentName">
+              <option [value]="null">-- Sin departamento --</option>
+              @for (dept of departments; track dept.id) {
+                <option [value]="dept.name">{{ dept.name }}</option>
+              }
+            </select>
+          </td>
+          <td>
             <button type="button" (click)="save(employee.id)" [disabled]="saving()"
               class="employee-list__button">✓</button>
             <button type="button" (click)="cancelEdit()" [disabled]="saving()" class="employee-list__button">X</button>
@@ -85,6 +94,7 @@
           <td>{{ employee.email }}</td>
           <td>{{ employee.position }}</td>
           <td>{{ employee.hiredAt  | date:'MM/dd/yyyy' }}</td>
+          <td>{{ employee.departmentName ?? '—' }}</td>
           <td>
             <button type="button" (click)="edit(employee)" class="employee-list__button--edit">
               <img src="assets/edit.svg" alt="Editar" class="employee-list__icono">
