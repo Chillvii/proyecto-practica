@@ -102,7 +102,8 @@ class EmployeeServiceTest {
                 "Banderas",
                 "antonio_banderas@example.com",
                 "Backend Developer",
-                LocalDate.of(2025, 2, 25)
+                LocalDate.of(2025, 2, 25),
+                null
         );
 
         EmployeeDto request = new EmployeeDto(
@@ -111,7 +112,8 @@ class EmployeeServiceTest {
                 "Banderas",
                 "antonio_banderas@example.com",
                 "Backend Developer",
-                LocalDate.of(2025, 2, 25)
+                LocalDate.of(2025, 2, 25),
+                null
         );
 
         when(repository.save(any())).thenReturn(entity);
@@ -134,7 +136,8 @@ class EmployeeServiceTest {
                 "Banderas",
                 "ana@example.com",
                 "Backend Developer",
-                LocalDate.of(2025, 2, 25)
+                LocalDate.of(2025, 2, 25),
+                null
         );
 
         when(repository.existsByEmail("ana@example.com")).thenReturn(true);
@@ -162,7 +165,8 @@ class EmployeeServiceTest {
                 "Banderas",
                 "antonio@example.com",
                 "Frontend Developer",
-                LocalDate.of(2025, 2, 25)
+                LocalDate.of(2025, 2, 25),
+                null
         );
 
         when(repository.findById("20")).thenReturn(Optional.of(existing));
@@ -185,7 +189,8 @@ class EmployeeServiceTest {
                 "Banderas",
                 "antonio@example.com",
                 "Frontend Developer",
-                LocalDate.of(2025, 2, 25)
+                LocalDate.of(2025, 2, 25),
+                null
         );
 
         when(repository.findById("20")).thenReturn(Optional.empty());
@@ -208,7 +213,8 @@ class EmployeeServiceTest {
                 "Banderas",
                 "ana@example.com",
                 "Backend Developer",
-                LocalDate.of(2025, 2, 25)
+                LocalDate.of(2025, 2, 25),
+                null
         );
 
         when(repository.findById("20")).thenReturn(Optional.of(existing));

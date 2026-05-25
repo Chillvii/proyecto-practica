@@ -1,0 +1,9 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/proyecto_practica
+      auto-index-creation: true
+
+jwt:
+  secret: ZGV2UHJveWVjdG9QcmFjdGljYVNlY3JldEtleTIwMjYh
+  expiration-ms: 86400000
