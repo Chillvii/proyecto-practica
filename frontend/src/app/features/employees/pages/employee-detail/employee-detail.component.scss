@@ -1,0 +1,183 @@
+.employee-detail {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+
+  &__header {
+    margin-bottom: 1.5rem;
+
+    h2 {
+      margin: 0 0 0.25rem;
+      font-size: 1.5rem;
+      color: #111827;
+    }
+  }
+
+  &__hint {
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.9rem;
+  }
+
+  &__status {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    color: #374151;
+
+    &--error {
+      background-color: #fef2f2;
+      border-color: #fecaca;
+      color: #b91c1c;
+    }
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+
+    thead {
+      background-color: #f3f4f6;
+    }
+
+    th,
+    td {
+      padding: 0.65rem 0.9rem;
+      text-align: left;
+      font-size: 0.95rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #fafafa;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    td:nth-child(1) input { max-width: 120px; } // nombre
+    td:nth-child(2) input { max-width: 120px; } // apellido
+    td:nth-child(3) input { max-width: 250px; } // email
+    td:nth-child(4) input { max-width: 180px; } // puesto
+    td:nth-child(5) input { max-width: 130px; } // fecha
+  }
+
+  &__button {
+    margin-top: 15%;
+    border: none;
+    background: none;
+    display: block;
+    margin: 0 auto;
+
+    &:hover {
+      border-radius: 5px;
+      background-color: #649edb;
+    }
+
+    &--delete {
+      border: none;
+      background: none;
+      display: block;
+      margin: 0 auto;
+
+      &:hover {
+        border-radius: 5px;
+        background-color: #dd2c2c;
+      }
+    }
+
+    &--edit {
+      border: none;
+      background: none;
+      display: block;
+      margin: 0 auto;
+
+      &:hover {
+        border-radius: 5px;
+        background-color: #e6a823;
+      }
+    }
+
+    &--return {
+      border-width: 1px;
+      font-weight: bold;
+      border: none;
+      background-color: #4aa0fc;
+      border-radius: 5px;
+      color: rgb(255, 255, 255);
+      transition: 0.2s;
+
+      &:hover {
+        background-color: #2872c2;
+      }
+    }
+  }
+
+  &__icono {
+    width: 10px;
+    height: 10px;
+  }
+
+  //CAJA DE ERRORES
+  &__errors-box {
+    background-color: #ffe5e5;
+    border: 1px solid #f87171;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 10px;
+
+    strong {
+      color: #b91c1c;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin: 0;
+    }
+
+    li {
+      color: #b91c1c;
+      font-size: 13px;
+    }
+  }
+
+  //MODAL
+  .modal-backdrop {
+    //fondo del modal
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal {
+    //ventana emergente
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    text-align: center;
+
+    &__actions {
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-around;
+    }
+  }
+}

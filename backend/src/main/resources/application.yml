@@ -1,14 +1,6 @@
 spring:
-  profiles:
-    active: dev
-
   application:
     name: proyecto-practica
-
-  data:
-    mongodb:
-      uri: mongodb://localhost:27017/proyecto_practica
-      auto-index-creation: true
 
   mvc:
     throw-exception-if-no-handler-found: true

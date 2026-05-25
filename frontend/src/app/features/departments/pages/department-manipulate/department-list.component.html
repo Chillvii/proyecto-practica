@@ -1,0 +1,74 @@
+<section class="department-list">
+  <header class="department-list__header">
+    <button [routerLink]="['/employees/new']" class="department-list__button--return"> ← </button>
+    <h2>Departamentos</h2>
+    <p class="department-list__hint">Gestiona los departamentos de la empresa.</p>
+    @if (errorMessage) {
+      <div class="department-list__errors-box">
+        <strong>{{ errorMessage }}</strong>
+      </div>
+    }
+  </header>
+
+  <!-- Formulario de alta -->
+  <form [formGroup]="addForm" class="department-list__add-form">
+    <input type="text" formControlName="name" placeholder="Nombre del departamento" />
+    <button type="button" (click)="create()" [disabled]="saving()" class="department-list__button--add">+ Añadir</button>
+  </form>
+
+  <!-- Tabla -->
+  @if (loading()) {
+    <p class="department-list__status">Cargando departamentos…</p>
+  } @else if (error()) {
+    <p class="department-list__status department-list__status--error">{{ error() }}</p>
+  } @else if (departments.length === 0) {
+    <p class="department-list__status">No hay departamentos.</p>
+  } @else {
+    <form [formGroup]="editForm">
+      <table class="department-list__table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (dept of departments; track dept.id) {
+            <tr>
+              @if (editingId === dept.id) {
+                <td><input formControlName="name" /></td>
+                <td>
+                  <button type="button" (click)="save(dept.id)" [disabled]="saving()" class="department-list__button">✓</button>
+                  <button type="button" (click)="cancelEdit()" [disabled]="saving()" class="department-list__button">X</button>
+                </td>
+              } @else {
+                <td>{{ dept.name }}</td>
+                <td>
+                  <button type="button" (click)="edit(dept)" class="department-list__button--edit">
+                    <img src="assets/edit.svg" alt="Editar" class="department-list__icono">
+                  </button>
+                  <button type="button" (click)="delete(dept.id)" class="department-list__button--delete">
+                    <img src="assets/delete.svg" alt="Borrar" class="department-list__icono">
+                  </button>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </form>
+  }
+
+  @if (showDeleteModal) {
+    <div class="modal-backdrop">
+      <div class="modal">
+        <h3>¿Seguro que quieres borrar este departamento?</h3>
+        <p>Si tiene empleados asignados no se podrá borrar.</p>
+        <div class="modal__actions">
+          <button (click)="confirmDelete()">Eliminar</button>
+          <button (click)="showDeleteModal = false">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  }
+</section>

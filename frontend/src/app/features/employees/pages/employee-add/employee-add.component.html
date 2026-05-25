@@ -1,0 +1,78 @@
+<section class="employee-add">
+    <header class="employee-add">
+        <button [routerLink]="['']" class="employee-add__button--return"> ← </button>
+        <h2>Formulario empleado</h2>
+    </header>
+    <form [formGroup]="employeeForm" class="__formulario">
+        <fieldset>
+            <!-- Nombre -->
+            @if (employeeForm.get('firstName')?.invalid && (employeeForm.get('firstName')?.touched ||
+            employeeForm.get('firstName')?.dirty)) {
+            <p class="employee-add__status employee-add__status--error">El nombre es obligatorio</p>
+            }
+            <label for="employee-name">Nombre: </label>
+            <input type="text" id="employee-name" formControlName="firstName"><br />
+
+            <!-- Apellido -->
+            @if (employeeForm.get('lastName')?.invalid && (employeeForm.get('lastName')?.touched ||
+            employeeForm.get('lastName')?.dirty)) {
+            <p class="employee-add__status employee-add__status--error">El apellido es obligatorio</p>
+            }
+            <label for="employee-lastname">Apellido: </label>
+            <input type="text" id="employee-lastname" formControlName="lastName"><br />
+
+            <!-- Email -->
+            @if (
+            employeeForm.get('email')?.invalid && (employeeForm.get('email')?.touched ||
+            employeeForm.get('email')?.dirty)
+            ) {
+            @if (employeeForm.get('email')?.errors?.['required']) {
+            <p class="employee-add__status employee-add__status--error">El email es obligatorio</p>
+            }
+
+            @if (employeeForm.get('email')?.errors?.['email']) {
+            <p class="employee-add__status employee-add__status--error">Formato de email inválido</p>
+            }
+
+            @if (employeeForm.get('email')?.errors?.['pattern']) {
+            <p class="employee-add__status employee-add__status--error">Debe tener dominio válido (ej: .com)</p>
+            }
+            }
+            <label for="employee-email">Email: </label>
+            <input type="email" id="employee-email" formControlName="email"><br />
+
+            <!-- Puesto -->
+            @if (employeeForm.get('position')?.invalid && (employeeForm.get('position')?.touched ||
+            employeeForm.get('position')?.dirty)) {
+            <p class="employee-add__status employee-add__status--error">El puesto es obligatorio</p>
+            }
+            <label for="employee-postion">Puesto: </label>
+            <input type="text" id="employee-postion" formControlName="position"><br />
+
+            <div class="employee-add__dept-row">
+                <button type="button" [routerLink]="['/departments']"
+                    class="employee-add__button--config_dep">⚙</button>
+                <label for="employee-dept">Departamento:</label>
+            </div>
+            <select id="employee-dept" formControlName="departmentName">
+                <option [value]="null">
+                    {{ departments.length === 0 ? 'Cargando...' : '-- Sin departamento --' }}
+                </option>
+                @for (dept of departments; track dept.id) {
+                <option [value]="dept.name">{{ dept.name }}</option>
+                }
+            </select>
+
+            @if (errorMessage) {
+            <p class="employee-add__status employee-add__status--errorDuplicado">
+                {{ errorMessage }}
+            </p>
+            }
+            <button type="button" (click)="create()" class="employee-add__button--add">
+                Crear empleado
+            </button>
+
+        </fieldset>
+
+    </form>
+</section>

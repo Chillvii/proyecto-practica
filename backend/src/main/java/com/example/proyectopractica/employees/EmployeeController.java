@@ -1,10 +1,14 @@
 package com.example.proyectopractica.employees;
 
+import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,5 +29,46 @@ public class EmployeeController {
     @GetMapping
     public List<EmployeeDto> list() {
         return service.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable String id){
+        return ResponseEntity.ok(service.findById(id));
+    }
+
+    // EmployeeController
+    @GetMapping("/by-department/{name}")
+    public ResponseEntity<List<EmployeeDto>> getByDepartment(@PathVariable String name) {
+        return ResponseEntity.ok(service.findByDepartment(name));
+    }
+
+    @PostMapping("/new")
+    public ResponseEntity<EmployeeDto> addEmployee(@Valid @RequestBody EmployeeDto request){
+        EmployeeDto dto = service.addEmployee(request);
+        return ResponseEntity.created(URI.create("/api/employees/"+dto.id())).body(dto);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable String id, @Valid @RequestBody EmployeeDto request){
+        return ResponseEntity.ok(service.updateEmployee(id,request));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEmployee(@PathVariable String id){
+        service.deleteEmployee(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    //filtros
+    @GetMapping("/filter")
+    public ResponseEntity<PageResponse> getEmployees(
+            @RequestParam(required = false) String firstName,
+            //@RequestParam(required = false) String lastName,
+            @RequestParam(required = false) String position,
+            @RequestParam(required = false) LocalDate from,
+            @RequestParam(required = false) LocalDate to,
+            @PageableDefault(size = 5,page = 0) Pageable pageable){
+
+        return ResponseEntity.ok(service.getEmployees(firstName, position, from, to, pageable));
     }
 }

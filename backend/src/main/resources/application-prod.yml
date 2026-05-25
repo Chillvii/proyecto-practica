@@ -1,0 +1,12 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/proyecto_practica
+      auto-index-creation: false
+
+cors:
+  allowed-origins: ${ALLOWED-ORIGINS}
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration-ms: 86400000 #24h

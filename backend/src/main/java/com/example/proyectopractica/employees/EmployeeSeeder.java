@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@Order(2)
 public class EmployeeSeeder implements CommandLineRunner {
 
     private final EmployeeRepository repository;
@@ -31,29 +33,30 @@ public class EmployeeSeeder implements CommandLineRunner {
         }
 
         List<Employee> sample = List.of(
-                build("Ana",     "García",    "ana.garcia@example.com",     "Backend Developer",  LocalDate.of(2022, 3, 14)),
-                build("Bruno",   "López",     "bruno.lopez@example.com",    "Frontend Developer", LocalDate.of(2021, 7,  1)),
-                build("Carmen",  "Martínez",  "carmen.martinez@example.com","Tech Lead",          LocalDate.of(2019, 11, 23)),
-                build("David",   "Rodríguez", "david.rodriguez@example.com","DevOps Engineer",    LocalDate.of(2020, 2, 10)),
-                build("Elena",   "Sánchez",   "elena.sanchez@example.com",  "QA Engineer",        LocalDate.of(2023, 5,  5)),
-                build("Fernando","Pérez",     "fernando.perez@example.com", "Product Manager",    LocalDate.of(2018, 9, 17)),
-                build("Gloria",  "Ruiz",      "gloria.ruiz@example.com",    "UX Designer",        LocalDate.of(2022, 1, 30)),
-                build("Héctor",  "Jiménez",   "hector.jimenez@example.com", "Backend Developer",  LocalDate.of(2023, 8, 12)),
-                build("Irene",   "Moreno",    "irene.moreno@example.com",   "Data Engineer",      LocalDate.of(2021, 4, 19)),
-                build("Javier",  "Torres",    "javier.torres@example.com",  "Fullstack Developer",LocalDate.of(2024, 1,  8))
+                build("Ana",      "García",    "ana.garcia@example.com",      "Backend Developer",   LocalDate.of(2022, 3, 14),  "Engineering"),
+                build("Bruno",    "López",     "bruno.lopez@example.com",     "Frontend Developer",  LocalDate.of(2021, 7,  1),  "Engineering"),
+                build("Carmen",   "Martínez",  "carmen.martinez@example.com", "Tech Lead",           LocalDate.of(2019, 11, 23), "Engineering"),
+                build("David",    "Rodríguez", "david.rodriguez@example.com", "DevOps Engineer",     LocalDate.of(2020, 2, 10),  "DevOps"),
+                build("Elena",    "Sánchez",   "elena.sanchez@example.com",   "QA Engineer",         LocalDate.of(2023, 5,  5),  "QA"),
+                build("Fernando", "Pérez",     "fernando.perez@example.com",  "Product Manager",     LocalDate.of(2018, 9, 17),  "Product"),
+                build("Gloria",   "Ruiz",      "gloria.ruiz@example.com",     "UX Designer",         LocalDate.of(2022, 1, 30),  "Design"),
+                build("Héctor",   "Jiménez",   "hector.jimenez@example.com",  "Backend Developer",   LocalDate.of(2023, 8, 12),  "Engineering"),
+                build("Irene",    "Moreno",    "irene.moreno@example.com",    "Data Engineer",       LocalDate.of(2021, 4, 19),  "Data"),
+                build("Javier",   "Torres",    "javier.torres@example.com",   "Fullstack Developer", LocalDate.of(2024, 1,  8),  "Engineering")
         );
 
         repository.saveAll(sample);
         log.info("Seed completado: insertados {} empleados de ejemplo.", sample.size());
     }
 
-    private static Employee build(String firstName, String lastName, String email, String position, LocalDate hiredAt) {
+    private static Employee build(String firstName, String lastName, String email, String position, LocalDate hiredAt, String departmentName) {
         return Employee.builder()
                 .firstName(firstName)
                 .lastName(lastName)
                 .email(email)
                 .position(position)
                 .hiredAt(hiredAt)
+                .departmentName(departmentName)
                 .build();
     }
 }

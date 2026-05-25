@@ -12,8 +12,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * restrictiva acorde a tu dominio real; abrir CORS a localhost:4200 es razonable
  * en local pero no debe replicarse en producción tal cual.
  */
-@Configuration
-@Profile("dev")
+//@Configuration
+//@Profile("dev")
 public class CorsConfig implements WebMvcConfigurer {
 
     @Override

@@ -2,6 +2,7 @@ package com.example.proyectopractica.employees;
 
 import java.time.LocalDate;
 
+import com.example.proyectopractica.departments.Department;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -37,4 +38,10 @@ public class Employee {
     private String position;
 
     private LocalDate hiredAt;
+
+    // Relación embed: guardamos el nombre del departamento directamente en el empleado.
+    // Motivo: evita joins, simplifica las queries y es suficiente para esta aplicacion.
+    // Contras: si se renombra un departamento hay que propagar el cambio.
+    // (ver DepartmentService.update → employeeRepository.updateDepartmentName).
+    private String departmentName;
 }

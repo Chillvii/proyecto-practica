@@ -11,4 +11,30 @@ export interface Employee {
   email: string;
   position: string;
   hiredAt: string;
+  departmentName?: string;
 }
+
+export interface EmployeeAdd {
+  firstName: string;
+  lastName: string;
+  email: string;
+  position: string;
+  departmentName?: string;
+}
+
+//dtos filtros:
+export interface EmployeeFilters {
+  firstName?: string;
+  position?: string;
+  from?: string;
+  to?: string;
+}
+
+export interface PageResponse {
+  content: Employee[];
+  number: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+
